@@ -160,3 +160,94 @@ on ca.country_key = v1.visitor_country_key
   join dim_country cb
 on cb.country_key = v1.host_country_key
  order by visit_a_to_b;
+
+-- KPI table: one row per visit and per day in its PRE and POST windows.
+-- Each visit receives 15 PRE rows (before arrival) and 15 POST rows (after departure),
+-- including days without matching events so that aggregate means remain exact.
+-- n_events is counting the number of bilateral events on that day, depending on GDELT some events could be counted multiple times if they have multiple mentions
+drop table if exists kpi_visit_day;
+
+create table kpi_visit_day as
+with window_days as (
+   select v.visit_key,
+          d.date_key,
+          w.window_period,
+          case
+             when w.window_period = 'PRE' then d.date_key - v.start_date_key
+             else d.date_key - v.end_date_key
+          end as day_offset,
+          v.visitor_country_key,
+          v.host_country_key
+     from fact_visit v
+     cross join lateral (
+        values
+           ('PRE', v.pre_window_start, v.pre_window_end),
+           ('POST', v.post_window_start, v.post_window_end)
+     ) as w(window_period, window_start, window_end)
+     join dim_date d
+on d.date_key between w.window_start and w.window_end
+),
+window_flags as (
+   select wd.*,
+          exists (
+             select 1
+               from fact_visit v2
+              where v2.visit_key <> wd.visit_key
+                and (
+                   (v2.visitor_country_key = wd.visitor_country_key
+                    and v2.host_country_key = wd.host_country_key)
+                   or
+                   (v2.visitor_country_key = wd.host_country_key
+                    and v2.host_country_key = wd.visitor_country_key)
+                )
+                and (
+                   wd.date_key between v2.pre_window_start
+                                      and v2.pre_window_end
+                   or wd.date_key between v2.post_window_start
+                                      and v2.post_window_end
+                )
+          ) as is_window_overlapping
+     from window_days wd
+)
+select wf.visit_key,
+       wf.date_key,
+       wf.window_period,
+       wf.day_offset,
+       count(e.gdelt_event_id) as n_events,
+       coalesce(sum(e.avg_tone), 0.0) as sum_avg_tone,
+       coalesce(sum(e.goldstein_scale), 0.0) as sum_goldstein,
+       coalesce(
+          sum(
+             case
+                when et.is_cooperative then 1
+                else 0
+             end
+          ),
+          0
+       ) as n_cooperative,
+       wf.is_window_overlapping
+  from window_flags wf
+  left join fact_gdelt_event e
+on e.event_date_key = wf.date_key
+   and (
+      (e.actor1_country_key = wf.visitor_country_key
+       and e.actor2_country_key = wf.host_country_key)
+      or
+      (e.actor1_country_key = wf.host_country_key
+       and e.actor2_country_key = wf.visitor_country_key)
+   )
+  left join dim_event_type et
+on et.event_type_key = e.event_type_key
+ group by wf.visit_key,
+          wf.date_key,
+          wf.window_period,
+          wf.day_offset,
+          wf.is_window_overlapping;
+
+alter table kpi_visit_day
+   add primary key (visit_key, date_key),
+   add foreign key (visit_key) references fact_visit (visit_key),
+   add foreign key (date_key) references dim_date (date_key);
+
+create index idx_kpi_visit_day_window
+    on kpi_visit_day (window_period, visit_key);
