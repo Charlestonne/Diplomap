@@ -161,93 +161,95 @@ on ca.country_key = v1.visitor_country_key
 on cb.country_key = v1.host_country_key
  order by visit_a_to_b;
 
+
 -- KPI table: one row per visit and per day in its PRE and POST windows.
 -- Each visit receives 15 PRE rows (before arrival) and 15 POST rows (after departure),
 -- including days without matching events so that aggregate means remain exact.
 -- n_events is counting the number of bilateral events on that day, depending on GDELT some events could be counted multiple times if they have multiple mentions
-drop table if exists kpi_visit_day;
 
-create table kpi_visit_day as
-with window_days as (
-   select v.visit_key,
-          d.date_key,
-          w.window_period,
-          case
-             when w.window_period = 'PRE' then d.date_key - v.start_date_key
-             else d.date_key - v.end_date_key
-          end as day_offset,
-          v.visitor_country_key,
-          v.host_country_key
-     from fact_visit v
-     cross join lateral (
-        values
-           ('PRE', v.pre_window_start, v.pre_window_end),
-           ('POST', v.post_window_start, v.post_window_end)
-     ) as w(window_period, window_start, window_end)
-     join dim_date d
-on d.date_key between w.window_start and w.window_end
-),
-window_flags as (
-   select wd.*,
-          exists (
-             select 1
-               from fact_visit v2
-              where v2.visit_key <> wd.visit_key
-                and (
-                   (v2.visitor_country_key = wd.visitor_country_key
-                    and v2.host_country_key = wd.host_country_key)
-                   or
-                   (v2.visitor_country_key = wd.host_country_key
-                    and v2.host_country_key = wd.visitor_country_key)
-                )
-                and (
-                   wd.date_key between v2.pre_window_start
-                                      and v2.pre_window_end
-                   or wd.date_key between v2.post_window_start
-                                      and v2.post_window_end
-                )
-          ) as is_window_overlapping
-     from window_days wd
-)
-select wf.visit_key,
-       wf.date_key,
-       wf.window_period,
-       wf.day_offset,
-       count(e.gdelt_event_id) as n_events,
-       coalesce(sum(e.avg_tone), 0.0) as sum_avg_tone,
-       coalesce(sum(e.goldstein_scale), 0.0) as sum_goldstein,
-       coalesce(
-          sum(
-             case
-                when et.is_cooperative then 1
-                else 0
-             end
-          ),
-          0
-       ) as n_cooperative,
-       wf.is_window_overlapping
-  from window_flags wf
-  left join fact_gdelt_event e
-on e.event_date_key = wf.date_key
-   and (
-      (e.actor1_country_key = wf.visitor_country_key
-       and e.actor2_country_key = wf.host_country_key)
-      or
-      (e.actor1_country_key = wf.host_country_key
-       and e.actor2_country_key = wf.visitor_country_key)
-   )
-  left join dim_event_type et
-on et.event_type_key = e.event_type_key
- group by wf.visit_key,
-          wf.date_key,
-          wf.window_period,
-          wf.day_offset,
-          wf.is_window_overlapping;
+/** 
 
-alter table kpi_visit_day
-   add primary key (visit_key, date_key),
-   add foreign key (visit_key) references fact_visit (visit_key),
-   add foreign key (date_key) references dim_date (date_key);
+FOR EACH visit IN fact_visit:
 
-create index idx_kpi_visit_day_window
-    on kpi_visit_day (window_period, visit_key);
+    DEFINE the PRE window:
+        from 15 days before the visit arrival date
+        to 1 day before the visit arrival date
+
+    DEFINE the POST window:
+        from 1 day after the visit departure date
+        to 15 days after the visit departure date
+
+    FOR EACH day IN the PRE window:
+
+        SET window_period = "PRE"
+        SET day_offset = number of days between the day and the arrival date
+        -- day_offset values: -15, -14, ..., -1
+
+        FIND all GDELT events:
+            - occurring on this day
+            - whose actors are the visitor and the host
+            - in either direction:
+                visitor -> host
+                host -> visitor
+
+        AGGREGATE the events:
+            n_events = number of events
+            sum_avg_tone = sum of the average tones
+            sum_goldstein = sum of the Goldstein scales
+            n_cooperative = number of cooperative events
+
+        IF no event exists:
+            SET all aggregate values to zero
+
+        SET is_window_overlapping = FALSE
+
+        FOR EACH other_visit IN fact_visit:
+
+            SKIP the current visit
+
+            IF the two visits involve the same pair of countries,
+            regardless of direction,
+            AND the current day belongs to the other visit's PRE or POST window:
+                SET is_window_overlapping = TRUE
+                STOP checking other visits
+
+        INSERT one row into kpi_visit_day
+
+
+    FOR EACH day IN the POST window:
+
+        SET window_period = "POST"
+        SET day_offset = number of days between the day and the departure date
+        -- day_offset values: 1, 2, ..., 15
+
+        FIND all GDELT events:
+            - occurring on this day
+            - whose actors are the visitor and the host
+            - in either direction:
+                visitor -> host
+                host -> visitor
+
+        AGGREGATE the events:
+            n_events = number of events
+            sum_avg_tone = sum of the average tones
+            sum_goldstein = sum of the Goldstein scales
+            n_cooperative = number of cooperative events
+
+        IF no event exists:
+            SET all aggregate values to zero
+
+        SET is_window_overlapping = FALSE
+
+        FOR EACH other_visit IN fact_visit:
+
+            SKIP the current visit
+
+            IF the two visits involve the same pair of countries,
+            regardless of direction,
+            AND the current day belongs to the other visit's PRE or POST window:
+                SET is_window_overlapping = TRUE
+                STOP checking other visits
+
+        INSERT one row into kpi_visit_day
+
+    **/
