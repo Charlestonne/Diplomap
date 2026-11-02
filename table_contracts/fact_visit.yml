@@ -1,1 +1,89 @@
-# This contract will document visit grain, foreign keys, date windows, and visit-level business rules.
+name: fact_visit
+type: table
+layer: production
+grain: One row is one visit, that is one leader travelling to one host country on one trip.
+description: >
+  Diplomatic visits of the first semester of 2025, with the PRE and POST analysis
+  windows used by the GDELT indicators. Source of the visit dates is Wikipedia.
+sources: [Wikipedia diplomatic trip lists (scraped), Wikidata]
+primary_key: [visit_key]
+columns:
+  - name: visit_key
+    type: BIGINT
+    nullable: false
+    description: Surrogate key.
+  - name: leader_key
+    type: INTEGER
+    nullable: false
+    foreign_key: dim_leader.leader_key
+    description: Leader version valid at the time of the visit.
+  - name: visitor_country_key
+    type: INTEGER
+    nullable: false
+    foreign_key: dim_country.country_key
+    description: Country of the visiting leader.
+  - name: host_country_key
+    type: INTEGER
+    nullable: false
+    foreign_key: dim_country.country_key
+    description: Country visited.
+  - name: visit_type_key
+    type: INTEGER
+    nullable: false
+    foreign_key: dim_visit_type.visit_type_key
+    description: Category of the visit.
+  - name: start_date_key
+    type: DATE
+    nullable: false
+    foreign_key: dim_date.date_key
+    description: First day of the visit.
+  - name: end_date_key
+    type: DATE
+    nullable: false
+    foreign_key: dim_date.date_key
+    description: Last day of the visit.
+  - name: duration_days
+    type: INTEGER
+    nullable: false
+    description: Length of the visit in days, both ends included.
+  - name: is_multilateral
+    type: BOOLEAN
+    nullable: false
+    description: True for a multilateral event such as a summit.
+  - name: matched_in_gdelt
+    type: BOOLEAN
+    nullable: false
+    description: True when the visit is also coded in GDELT as CAMEO 042 (make a visit) or 043 (host a visit).
+  - name: wiki_page_id
+    type: BIGINT
+    nullable: false
+    description: Lineage. Identifier of the scraped Wikipedia page.
+  - name: wiki_revision_id
+    type: BIGINT
+    nullable: false
+    description: Lineage. Revision of the page that was scraped.
+  - name: pre_window_start
+    type: DATE
+    nullable: false
+    description: Start date minus 15 days.
+  - name: pre_window_end
+    type: DATE
+    nullable: false
+    description: Start date minus 1 day.
+  - name: post_window_start
+    type: DATE
+    nullable: false
+    description: End date plus 1 day.
+  - name: post_window_end
+    type: DATE
+    nullable: false
+    description: End date plus 15 days.
+business_rules:
+  - Dates are inclusive. duration_days equals end minus start plus 1.
+  - Windows are fixed at 15 days; the DDL enforces the arithmetic. Window overlap between visits is a derived property, handled in the KPI layer.
+  - visitor_country_key must differ from host_country_key.
+  - visitor_country_key should equal the represented_country_key of the leader version (cross-table rule, checked by the quality gate).
+  - Scope is the first semester of 2025 (start date from 2025-01-01 to 2025-06-30), checked by the quality gate.
+open_questions:
+  - A visit ending after 2025-06-30 has a POST window beyond 2025-07-15, outside the ingestion range. Decide whether to quarantine such visits or to extend the ingestion by a few days.
+  - Exact rule for matched_in_gdelt (same country pair, event date inside the visit days?) to be fixed with the staging owner.
