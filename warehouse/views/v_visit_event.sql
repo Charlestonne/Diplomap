@@ -1,0 +1,1 @@
+-- This view will expose events attributed to visits and classified into PRE or POST windows.

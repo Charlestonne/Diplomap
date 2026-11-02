@@ -1,0 +1,1 @@
+-- This test script will verify production table structure, keys, row counts, and referential integrity.

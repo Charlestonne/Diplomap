@@ -1,0 +1,1 @@
+-- This script will define the production star-schema tables and their keys and constraints.

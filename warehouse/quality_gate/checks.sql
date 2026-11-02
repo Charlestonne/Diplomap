@@ -1,0 +1,1 @@
+-- This script will define null, uniqueness, validity, referential integrity, and freshness checks.

@@ -1,0 +1,1 @@
+-- This script will clean, normalize, and prepare raw GDELT records for the staging layer.
