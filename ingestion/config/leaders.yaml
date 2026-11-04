@@ -1,0 +1,8 @@
+- leader_id: macron
+  leader_name: Emmanuel Macron
+  leader_page: Emmanuel Macron
+  represented_country_iso3: FRA
+  trips_pages:
+    - title: List of international presidential trips made by Emmanuel Macron
+      language: en
+      years: [2025]
