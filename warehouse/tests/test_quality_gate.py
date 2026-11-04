@@ -75,7 +75,7 @@ def test_gate_quarantines_each_invalid_row_with_its_rule():
     assert connection.execute("SELECT count(*) FROM v_quality_last_run").fetchone()[0] == len(results)
 
     # Second run: nothing left to quarantine.
-    again = gate.run(connection)
+    again = gate.run(connection, ["stg_gdelt_event"])
     assert all(r["status"] == "passed" for r in again)
     assert connection.execute("SELECT count(*) FROM quality_quarantine").fetchone()[0] == len(BROKEN)
 

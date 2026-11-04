@@ -62,4 +62,22 @@ INSERT OR REPLACE INTO quality_rule VALUES
     $$avg_tone IS NULL OR avg_tone NOT BETWEEN -100 AND 100$$),
 ('gdelt_09_mentions_invalid', 'stg_gdelt_event', 'P2', 'NumMentions missing or negative',
     $$num_mentions IS NULL OR num_mentions < 0$$);
+
+-- Visits (P4), on stg_fact_visit (warehouse/dimensions_and_facts/fact_visit.sql). Mirrors the constraints of
+-- fact_visit plus the scope of the study, so that loading it never fails.
+INSERT OR REPLACE INTO quality_rule VALUES
+('visit_01_leader_unknown', 'stg_fact_visit', 'P4', 'No dim_leader version valid on the first day of the visit',
+    $$leader_key IS NULL$$),
+('visit_02_host_unknown', 'stg_fact_visit', 'P4', 'Host country missing or not in dim_country',
+    $$host_country_key IS NULL$$),
+('visit_03_same_country', 'stg_fact_visit', 'P4', 'Host country is the country of the visiting leader',
+    $$visitor_country_key = host_country_key$$),
+('visit_04_dates_invalid', 'stg_fact_visit', 'P4', 'Start or end date missing, or end before start',
+    $$start_date_key IS NULL OR end_date_key IS NULL OR end_date_key < start_date_key$$),
+('visit_05_out_of_scope', 'stg_fact_visit', 'P4', 'Start outside 2025-01-01..2025-06-30 or end after 2025-07-15 (dim_date)',
+    $$start_date_key NOT BETWEEN DATE '2025-01-01' AND DATE '2025-06-30' OR end_date_key > DATE '2025-07-15'$$),
+('visit_06_field_missing', 'stg_fact_visit', 'P4', 'is_multilateral or Wikipedia lineage (page, revision) missing',
+    $$is_multilateral IS NULL OR wiki_page_id IS NULL OR wiki_revision_id IS NULL$$),
+('visit_07_duplicate', 'stg_fact_visit', 'P4', 'Same leader, host and start date already seen (latest revision kept)',
+    $$row_number() OVER (PARTITION BY leader_id, host_country_key, start_date_key ORDER BY wiki_revision_id DESC) > 1$$);
 -- To add when dim_country and dim_event_type exist (P3-10): country and CAMEO codes known by the dimensions.

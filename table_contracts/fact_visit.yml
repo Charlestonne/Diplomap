@@ -53,7 +53,7 @@ columns:
   - name: matched_in_gdelt
     type: BOOLEAN
     nullable: false
-    description: True when the visit is also coded in GDELT as CAMEO 042 (make a visit) or 043 (host a visit).
+    description: True when the visit is also coded in GDELT as CAMEO 042 (make a visit) or 043 (host a visit), between the visitor and host countries in either order, with an event date inside the visit days.
   - name: wiki_page_id
     type: BIGINT
     nullable: false
@@ -82,8 +82,9 @@ business_rules:
   - Dates are inclusive. duration_days equals end minus start plus 1.
   - Windows are fixed at 15 days; the DDL enforces the arithmetic. Window overlap between visits is a derived property, handled in the KPI layer.
   - visitor_country_key must differ from host_country_key.
-  - visitor_country_key should equal the represented_country_key of the leader version (cross-table rule, checked by the quality gate).
+  - visitor_country_key should equal the represented_country_key of the leader version (holds by construction, see below).
   - Scope is the first semester of 2025 (start date from 2025-01-01 to 2025-06-30), checked by the quality gate.
+  - leader_key is the dim_leader version valid on the start date; visitor_country_key is the represented_country_key of that version, so the cross-table rule holds by construction.
+  - Loaded by warehouse/dimensions_and_facts/build_facts.py from stg_visit (P3, columns listed in fact_visit.sql); invalid rows are quarantined by the visit_* rules of warehouse/quality_gate/checks.sql.
 open_questions:
   - A visit ending after 2025-06-30 has a POST window beyond 2025-07-15, outside the ingestion range. Decide whether to quarantine such visits or to extend the ingestion by a few days.
-  - Exact rule for matched_in_gdelt (same country pair, event date inside the visit days?) to be fixed with the staging owner.
