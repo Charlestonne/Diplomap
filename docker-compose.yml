@@ -23,8 +23,11 @@ x-airflow-common: &airflow-common
     # Task processes reach the Execution API through the service name, not localhost.
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-webserver:8080/execution/
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+    PYTHONPATH: /opt/diplomap
   volumes:
     - ./orchestration/dags:/opt/airflow/dags:ro
+    - ./ingestion:/opt/diplomap/ingestion:ro
+    - ./warehouse:/opt/diplomap/warehouse:ro
     - airflow-logs:/opt/airflow/logs
     - data:/data
 
@@ -69,6 +72,7 @@ services:
         done
         chown -R "$${AIRFLOW_UID}:0" /opt/airflow/logs
         /entrypoint airflow version
+        su airflow -s /bin/bash -c 'airflow pools set duckdb_writer 1 "Single writer for the DuckDB warehouse"'
     environment:
       <<: *airflow-common-env
       AIRFLOW_UID: ${AIRFLOW_UID:-50000}
