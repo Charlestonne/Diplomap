@@ -86,6 +86,8 @@ REJECTS_TABLE = "stg_gdelt_raw_rejects"
 def create_schema(connection: duckdb.DuckDBPyConnection) -> None:
     columns = ",\n".join(f'"{name}" {kind}' for name, kind in GDELT_COLUMNS)
     connection.execute(f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} ({columns})")
+    # Lineage: the archive each row came from, so a file can be reloaded without duplicates.
+    connection.execute(f"ALTER TABLE {TABLE_NAME} ADD COLUMN IF NOT EXISTS source_file VARCHAR")
     connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS {REJECTS_TABLE} (
@@ -117,23 +119,46 @@ def load_archive(
 ) -> dict[str, int | str]:
     csv_path = extract_csv(archive, temporary_dir)
     columns = "{" + ", ".join(f"'{name}': '{kind}'" for name, kind in GDELT_COLUMNS) + "}"
-    before = connection.execute(f"SELECT COUNT(*) FROM {TABLE_NAME}").fetchone()[0]
-    connection.execute(
-        f"""
-        INSERT INTO {TABLE_NAME}
-        SELECT *
-        FROM read_csv(
-            '{csv_path.as_posix()}',
-            delim='\\t',
-            header=false,
-            columns={columns},
-            nullstr='',
-            ignore_errors=true
+    # DuckDB keeps rejected lines in session-wide temp tables; clear them per file.
+    connection.execute("DROP TABLE IF EXISTS reject_errors")
+    connection.execute("DROP TABLE IF EXISTS reject_scans")
+    connection.begin()
+    try:
+        # Replace this file's rows so a rerun never duplicates them.
+        connection.execute(f"DELETE FROM {TABLE_NAME} WHERE source_file = ?", [archive.name])
+        connection.execute(f"DELETE FROM {REJECTS_TABLE} WHERE file_name = ?", [archive.name])
+        connection.execute(
+            f"""
+            INSERT INTO {TABLE_NAME}
+            SELECT *, ? AS source_file
+            FROM read_csv(
+                '{csv_path.as_posix()}',
+                delim='\\t',
+                header=false,
+                columns={columns},
+                nullstr='',
+                store_rejects=true
+            )
+            """,
+            [archive.name],
         )
-        """
-    )
-    after = connection.execute(f"SELECT COUNT(*) FROM {TABLE_NAME}").fetchone()[0]
-    loaded_rows = after - before
+        connection.execute(
+            f"""
+            INSERT INTO {REJECTS_TABLE}
+            SELECT ?, line, error_type || ': ' || error_message, csv_line
+            FROM reject_errors
+            -- One row per bad line: a truncated line otherwise logs one error per missing column.
+            QUALIFY row_number() OVER (PARTITION BY line ORDER BY column_idx) = 1
+            """,
+            [archive.name],
+        )
+        connection.commit()
+    except Exception:
+        connection.rollback()
+        raise
+    loaded_rows = connection.execute(
+        f"SELECT COUNT(*) FROM {TABLE_NAME} WHERE source_file = ?", [archive.name]
+    ).fetchone()[0]
     with csv_path.open("rb") as stream:
         raw_rows = sum(1 for _ in stream)
     return {
@@ -174,7 +199,9 @@ def main() -> int:
                 peak_rss = max(peak_rss, process.memory_info().rss)
 
         total_rows = connection.execute(f"SELECT COUNT(*) FROM {TABLE_NAME}").fetchone()[0]
-        reject_rows = connection.execute(f"SELECT COUNT(*) FROM {REJECTS_TABLE}").fetchone()[0]
+        reject_rows = connection.execute(
+            f"SELECT COUNT(DISTINCT (file_name, reject_line)) FROM {REJECTS_TABLE}"
+        ).fetchone()[0]
 
     metrics = {
         "database": str(args.database),
