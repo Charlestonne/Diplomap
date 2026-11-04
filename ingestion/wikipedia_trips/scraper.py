@@ -7,7 +7,7 @@ HEADERS = {
 }
 
 
-def fetch_wikipedia_page(page_title):
+def fetch_wikipedia_page(page_title, language="en"):
     params = {
         "action": "parse",
         "page": page_title,
@@ -17,7 +17,7 @@ def fetch_wikipedia_page(page_title):
     }
 
     response = requests.get(
-        API_URL,
+        f"https://{language}.wikipedia.org/w/api.php",
         params=params,
         headers=HEADERS,
         timeout=30
