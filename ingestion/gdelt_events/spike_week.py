@@ -7,6 +7,7 @@ import csv
 import hashlib
 import json
 import sys
+import time
 import urllib.error
 import urllib.request
 import zipfile
@@ -16,6 +17,8 @@ from pathlib import Path
 
 MASTERFILELIST_URL = "http://data.gdeltproject.org/gdeltv2/masterfilelist.txt"
 DEFAULT_START_DATE = date(2024, 12, 17)
+DOWNLOAD_RETRIES = 3
+RETRY_DELAY_SECONDS = 2
 
 
 def parse_timestamp(value: str) -> datetime:
@@ -48,6 +51,23 @@ def download(url: str, destination: Path) -> int:
         if temporary.exists():
             temporary.unlink()
     return destination.stat().st_size
+
+
+def download_with_retries(
+    url: str,
+    destination: Path,
+    retries: int = DOWNLOAD_RETRIES,
+) -> tuple[int, int]:
+    """Download a file with bounded retries and return its size and attempts."""
+    last_error: Exception | None = None
+    for attempt in range(1, retries + 1):
+        try:
+            return download(url, destination), attempt
+        except (OSError, urllib.error.URLError) as error:
+            last_error = error
+            if attempt < retries:
+                time.sleep(RETRY_DELAY_SECONDS * attempt)
+    raise RuntimeError(f"Download failed after {retries} attempts: {last_error}")
 
 
 def validate_zip(path: Path) -> None:
@@ -101,15 +121,28 @@ def download_week(
             "file": str(destination.relative_to(output_dir)),
             "expected_size_bytes": entry["expected_size_bytes"],
             "expected_md5": entry["expected_md5"],
+            "attempts": 0,
         }
         try:
-            if overwrite or not destination.exists():
-                size = download(str(entry["url"]), destination)
-                validate_zip(destination)
-                row["status"] = "downloaded"
-            else:
+            existing_is_valid = False
+            existing_is_corrupt = destination.exists() and not overwrite
+            if destination.exists() and not overwrite:
+                existing_size = destination.stat().st_size
+                existing_md5 = md5_file(destination)
+                existing_is_valid = (
+                    existing_size == entry["expected_size_bytes"]
+                    and existing_md5 == entry["expected_md5"]
+                )
+                existing_is_corrupt = not existing_is_valid
+            if existing_is_valid:
                 size = destination.stat().st_size
-                row["status"] = "already_present"
+                row["status"] = "skipped_valid"
+                row["attempts"] = 0
+            else:
+                size, attempts = download_with_retries(str(entry["url"]), destination)
+                row["attempts"] = attempts
+                validate_zip(destination)
+                row["status"] = "redownloaded_corrupt" if existing_is_corrupt else "downloaded"
             actual_md5 = md5_file(destination)
             row["size_bytes"] = size
             row["md5"] = actual_md5
@@ -119,8 +152,8 @@ def download_week(
             )
             if not row["integrity_ok"]:
                 row["status"] = "integrity_failed"
-        except (OSError, ValueError, urllib.error.URLError) as error:
-            row["status"] = "missing_or_failed"
+        except (OSError, RuntimeError, ValueError, urllib.error.URLError) as error:
+            row["status"] = "download_failed"
             row["error"] = str(error)
             row["size_bytes"] = 0
             row["md5"] = ""
@@ -139,7 +172,7 @@ def write_manifest(output_dir: Path, rows: list[dict[str, object]]) -> None:
         fields = [
             "date_utc", "timestamp_utc", "url", "file", "status",
             "expected_size_bytes", "size_bytes", "expected_md5", "md5",
-            "integrity_ok", "error",
+            "integrity_ok", "attempts", "error",
         ]
         writer = csv.DictWriter(stream, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()
@@ -152,7 +185,7 @@ def write_manifest(output_dir: Path, rows: list[dict[str, object]]) -> None:
             day,
             {"file_count": 0, "total_size_bytes": 0, "failed_count": 0, "integrity_failures": 0},
         )
-        if row["status"] in {"downloaded", "already_present"} and row["integrity_ok"]:
+        if row["integrity_ok"]:
             day_summary["file_count"] += 1
             day_summary["total_size_bytes"] += int(row["size_bytes"])
         else:
