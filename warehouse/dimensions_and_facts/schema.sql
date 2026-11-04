@@ -29,10 +29,10 @@ DROP TABLE IF EXISTS dim_country;
 CREATE TABLE dim_country (
     country_key   INTEGER NOT NULL PRIMARY KEY,
     country_name  VARCHAR NOT NULL,
-    region        VARCHAR,
     iso3_code     VARCHAR NOT NULL UNIQUE CHECK (length(iso3_code) = 3),
     fips_code     VARCHAR UNIQUE CHECK (fips_code IS NULL OR length(fips_code) = 2),
-    cameo_code    VARCHAR UNIQUE CHECK (cameo_code IS NULL OR length(cameo_code) = 3)
+    cameo_code    VARCHAR UNIQUE CHECK (cameo_code IS NULL OR length(cameo_code) = 3),
+    region        VARCHAR
 );
 
 /* Static calendar, one row per day from 2024-12-17 to 2025-07-15. */

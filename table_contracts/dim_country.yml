@@ -22,10 +22,6 @@ columns:
     type: VARCHAR
     nullable: false
     description: English name of the country.
-  - name: region
-    type: VARCHAR
-    nullable: true
-    description: World region, used to group countries on the globe.
   - name: iso3_code
     type: VARCHAR
     nullable: false
@@ -38,6 +34,10 @@ columns:
     type: VARCHAR
     nullable: true
     description: CAMEO country code (3 characters); used by the GDELT Actor1CountryCode and Actor2CountryCode fields.
+  - name: region
+    type: VARCHAR
+    nullable: true
+    description: World region, used to group countries on the globe.
 business_rules:
   - SCD Type 1. A change is a correction of reference data and overwrites the previous value.
   - The report types the codes CHAR(3) and CHAR(2). DuckDB does not enforce CHAR lengths, so the DDL uses VARCHAR with a CHECK on the length.

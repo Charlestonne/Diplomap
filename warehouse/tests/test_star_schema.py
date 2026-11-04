@@ -50,7 +50,7 @@ def seed(con):
     """Minimal valid dimension rows."""
     con.execute(
         """
-        INSERT INTO dim_country VALUES
+        INSERT INTO dim_country (country_key, country_name, region, iso3_code, fips_code, cameo_code) VALUES
             (1, 'France',  'Europe', 'FRA', 'FR', 'FRA'),
             (2, 'Japan',   'Asia',   'JPN', 'JA', 'JPN'),
             (3, 'Germany', 'Europe', 'DEU', 'GM', 'DEU')
@@ -171,8 +171,8 @@ def test_valid_rows_load(con):
 # 5. Business rules enforced by the DDL
 
 BAD_ROWS = {
-    "country_iso3_wrong_length": "INSERT INTO dim_country VALUES (9, 'X', NULL, 'FR', NULL, NULL)",
-    "country_duplicate_iso3": "INSERT INTO dim_country VALUES (9, 'X', NULL, 'FRA', NULL, NULL)",
+    "country_iso3_wrong_length": "INSERT INTO dim_country (country_key, country_name, region, iso3_code, fips_code, cameo_code) VALUES (9, 'X', NULL, 'FR', NULL, NULL)",
+    "country_duplicate_iso3": "INSERT INTO dim_country (country_key, country_name, region, iso3_code, fips_code, cameo_code) VALUES (9, 'X', NULL, 'FRA', NULL, NULL)",
     "event_type_bad_quad_class": "INSERT INTO dim_event_type VALUES (9, '050', '05', 5, FALSE)",
     "event_type_cooperative_flag_inconsistent": "INSERT INTO dim_event_type VALUES (9, '010', '01', 1, FALSE)",
     "event_type_root_out_of_range": "INSERT INTO dim_event_type VALUES (9, '2501', '25', 1, TRUE)",
