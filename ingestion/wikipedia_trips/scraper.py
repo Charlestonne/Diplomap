@@ -1,1 +1,32 @@
-# This module will retrieve the raw Wikipedia pages used to identify diplomatic trips.
+import requests
+
+API_URL = "https://en.wikipedia.org/w/api.php" # Wikimedia API endpoint
+
+HEADERS = {
+    "User-Agent": "DiplomaticTripsResearch/1.0 (local research script)"
+}
+
+
+def fetch_wikipedia_page(page_title):
+    params = {
+        "action": "parse",
+        "page": page_title,
+        "prop": "text|revid",
+        "format": "json",
+        "formatversion": 2
+    }
+
+    response = requests.get(
+        API_URL,
+        params=params,
+        headers=HEADERS,
+        timeout=30
+    )
+    response.raise_for_status()
+
+    data = response.json()
+
+    if "error" in data:
+        raise RuntimeError(data["error"])
+
+    return data["parse"]
