@@ -108,7 +108,7 @@ services:
     restart: unless-stopped
     command: api-server
     ports:
-      - "${AIRFLOW_WEB_PORT:-8081}:8080"
+      - "127.0.0.1:${AIRFLOW_WEB_PORT:-8081}:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/monitor/health"]
       interval: 30s
@@ -129,8 +129,8 @@ services:
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?set in .env}
     ports:
-      - "${NEO4J_HTTP_PORT:-7474}:7474"
-      - "${NEO4J_BOLT_PORT:-7687}:7687"
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
     volumes:
       - neo4j-data:/data
       - neo4j-logs:/logs
@@ -149,7 +149,7 @@ services:
     networks:
       - diplomap
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      - "127.0.0.1:${BACKEND_PORT:-8000}:8000"
     volumes:
       - data:/data:ro
     healthcheck:
@@ -170,7 +170,7 @@ services:
     networks:
       - diplomap
     ports:
-      - "${FRONTEND_PORT:-3000}:80"
+      - "127.0.0.1:${FRONTEND_PORT:-3000}:80"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
       interval: 15s
@@ -192,7 +192,7 @@ services:
       JUPYTER_TOKEN: ${JUPYTER_TOKEN:?set in .env}
       NB_UID: ${JUPYTER_UID:-1000}
     ports:
-      - "${JUPYTER_PORT:-8888}:8888"
+      - "127.0.0.1:${JUPYTER_PORT:-8888}:8888"
     volumes:
       - ./business_questions:/home/jovyan/work/business_questions
       - data:/data:ro
