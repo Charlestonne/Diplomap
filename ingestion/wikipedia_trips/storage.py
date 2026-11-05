@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 DEFAULT_OUTPUT = Path(__file__).resolve().parents[2] / "data/raw/wikipedia"
+DEFAULT_DATE_NORMALIZED_OUTPUT = Path(__file__).resolve().parents[2] / "data/date_normalized/wikipedia"
 
 
 def save_raw_page(leader_id, source, page, output=DEFAULT_OUTPUT):
@@ -53,3 +54,15 @@ def load_raw_page(directory):
         "revid": metadata["revision_id"],
         "language": metadata["language"],
     }
+
+
+def save_date_normalized_visits(visits, anomalies, directory):
+    """Write both result lists including empty ones as JSON"""
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    for filename, records in (("visits.json", visits), ("anomalies.json", anomalies)):
+        (directory / filename).write_text(
+            json.dumps(records, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    return directory
