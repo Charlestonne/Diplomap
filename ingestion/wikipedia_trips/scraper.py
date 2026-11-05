@@ -1,9 +1,13 @@
+import os
+import time
 import requests
 
 API_URL = "https://en.wikipedia.org/w/api.php" # Wikimedia API endpoint
 
 HEADERS = {
-    "User-Agent": "DiplomaticTripsResearch/1.0 (local research script)"
+    "User-Agent": os.environ.get(
+        "WIKIMEDIA_USER_AGENT", "DiplomaticTripsResearch/1.0 (local research script)"
+    )
 }
 
 
