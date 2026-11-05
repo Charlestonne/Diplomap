@@ -56,11 +56,18 @@ def parse_visit_dates(date_raw, year):
     return visit_date, visit_date
 
 
+def clean_country_name(country_raw):
+    """Remove reference markers and extra spaces without splitting the name."""
+    country_without_notes = re.sub(r"\[[^\]]*\]", "", country_raw)
+    return " ".join(country_without_notes.split())
+
+
 def normalize_visit(visit):
-    """Add normalized dates to a copy of a raw visit"""
+    """Add normalized dates and country name while preserving raw fields."""
     start_date, end_date = parse_visit_dates(visit["date_raw"], visit["year"])
     return {
         **visit,
+        "host_country_name": clean_country_name(visit["host_country_raw"]),
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
     }
