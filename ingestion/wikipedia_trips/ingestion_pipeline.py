@@ -27,10 +27,10 @@ def extract_page_visits(page, leader, year):
 
     visits = []
 
-    for table in tables:
+    for table_index, table in enumerate(tables, start=1):
         rows = parse_table(table)
 
-        for row in rows:
+        for row_index, row in enumerate(rows, start=1):
             visits.append({
                 "leader": leader,
                 "year": year,
@@ -41,7 +41,9 @@ def extract_page_visits(page, leader, year):
                 "date_raw": row["Date(s)"],
                 "details_raw": row["Details"],
                 "wiki_page_id": page["pageid"],
-                "wiki_revision_id": page["revid"]
+                "wiki_revision_id": page["revid"],
+                "source_table_index": table_index,
+                "source_row_index": row_index,
             })
 
     return visits
