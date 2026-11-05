@@ -74,3 +74,25 @@ def resolve_host_country_qids(visits, cache_path=DEFAULT_QID_CACHE, refresh=Fals
         enriched_visit["host_country_wikipedia_title"] = country_resolution["resolved_title"]
         enriched_visits.append(enriched_visit)
     return enriched_visits
+
+
+def resolve_leader_qid(visits, leader, cache_path=DEFAULT_QID_CACHE, refresh=False):
+    """Resolve the inventory's leader page once and enrich every retained visit."""
+    if not visits:
+        return []
+
+    leader_page = leader["leader_page"]
+    language = leader["leader_language"]
+    page_resolutions = resolve_page_qids([leader_page], language, cache_path, refresh)
+    leader_resolution = page_resolutions[leader_page]
+
+    enriched_visits = []
+    for visit in visits:
+        enriched_visit = dict(visit)
+        # Keep the inventory identifier separate from the Wikidata identifier.
+        enriched_visit["leader_local_id"] = leader["leader_id"]
+        enriched_visit["leader_qid"] = leader_resolution["qid"]
+        enriched_visit["leader_qid_status"] = leader_resolution["status"]
+        enriched_visit["leader_wikipedia_title"] = leader_resolution["resolved_title"]
+        enriched_visits.append(enriched_visit)
+    return enriched_visits

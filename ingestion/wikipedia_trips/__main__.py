@@ -15,14 +15,14 @@ def main():
     parser.add_argument("--output", default=DEFAULT_OUTPUT)
 
     parser.add_argument("--saved-page", help="Directory containing page.html and metadata.json")
-    parser.add_argument("--leader", default="Emmanuel Macron")
+    parser.add_argument("--leader", default="Emmanuel Macron", help="Leader name or local inventory identifier for QID resolution")
     parser.add_argument("--year", type=int, default=2025)
     parser.add_argument("--normalize", action="store_true", help="Normalize visit dates and filter by the configured analysis period")
     parser.add_argument("--normalized-output", default=DEFAULT_DATE_NORMALIZED_OUTPUT)
     parser.add_argument("--analysis-config", default=DEFAULT_ANALYSIS_CONFIG)
-    parser.add_argument("--resolve-qids", action="store_true", help="Resolve host country QIDs using MediaWiki and a local cache")
+    parser.add_argument("--resolve-qids", action="store_true", help="Resolve host country and leader QIDs using MediaWiki and a local cache")
     parser.add_argument("--qid-cache", default=DEFAULT_QID_CACHE)
-    parser.add_argument("--refresh-qids", action="store_true", help="Refresh cached results for requested country names")
+    parser.add_argument("--refresh-qids", action="store_true", help="Refresh cached results for requested countries and leader")
     args = parser.parse_args()
     if args.resolve_qids and not args.normalize:
         parser.error("--resolve-qids requires --normalize")
@@ -42,6 +42,7 @@ def main():
             resolve_qids=args.resolve_qids,
             qid_cache=args.qid_cache,
             refresh_qids=args.refresh_qids,
+            inventory=args.inventory,
         )
         print(f"Extracted: {summary['extracted']}; kept: {summary['normalized']}; "
               f"anomalies: {summary['anomalies']}; outside scope: {summary['excluded']}")

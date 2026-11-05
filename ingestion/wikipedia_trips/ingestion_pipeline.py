@@ -2,13 +2,13 @@ from datetime import date
 from pathlib import Path
 
 from .storage import save_raw_page, load_raw_page, DEFAULT_OUTPUT
-from .inventory import load_inventory, DEFAULT_INVENTORY
+from .inventory import load_inventory, find_leader, DEFAULT_INVENTORY
 from .scraper import fetch_wikipedia_page
 from .parser import get_year_tables, parse_table
 from .normalizer import normalize_visit
 from .config import load_analysis_period, DEFAULT_ANALYSIS_CONFIG
 from .storage import save_date_normalized_visits, DEFAULT_DATE_NORMALIZED_OUTPUT
-from .qid_resolver import resolve_host_country_qids
+from .qid_resolver import resolve_host_country_qids, resolve_leader_qid
 from .qid_cache import DEFAULT_QID_CACHE
 
 
@@ -93,16 +93,23 @@ def normalize_saved_visit_dates(
     directory, leader, year, output=DEFAULT_DATE_NORMALIZED_OUTPUT,
     analysis_config=DEFAULT_ANALYSIS_CONFIG,
     resolve_qids=False, qid_cache=DEFAULT_QID_CACHE, refresh_qids=False,
+    inventory=DEFAULT_INVENTORY,
 ):
     """Extract a saved page, normalize dates, filter and persist the results"""
     analysis_start, analysis_end = load_analysis_period(analysis_config)
     page = load_raw_page(directory)
+    if resolve_qids:
+        leader_config = find_leader(leader, inventory)
+        if page.get("leader_local_id") and page["leader_local_id"] != leader_config["leader_id"]:
+            raise ValueError("The selected leader does not match the saved page's metadata")
+        leader = leader_config["leader_name"]
     raw_visits = extract_page_visits(page, leader, year)
     visits, anomalies, excluded_count = normalize_and_filter_visit_dates(
         raw_visits, analysis_start, analysis_end
     )
     if resolve_qids:
         visits = resolve_host_country_qids(visits, qid_cache, refresh_qids)
+        visits = resolve_leader_qid(visits, leader_config, qid_cache, refresh_qids)
     # Separate captures and extraction years to avoid mixing their results.
     destination = (
         Path(output) / page["language"] / str(page["pageid"])

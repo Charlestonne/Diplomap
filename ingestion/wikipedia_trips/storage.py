@@ -50,6 +50,7 @@ def load_raw_page(directory):
     metadata = json.loads((directory / "metadata.json").read_text(encoding="utf-8"))
     return {
         "text": (directory / "page.html").read_text(encoding="utf-8"),
+        "leader_local_id": metadata.get("leader_id"),
         "pageid": metadata["page_id"],
         "revid": metadata["revision_id"],
         "language": metadata["language"],
