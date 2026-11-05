@@ -1,3 +1,4 @@
+import re
 from datetime import date
 
 MONTHS = {
@@ -34,3 +35,32 @@ def parse_date_range(date_text, year):
         raise ValueError(f"End date precedes start date: {date_text}")
 
     return start_date, end_date
+
+
+def clean_date_text(date_text):
+    """Remove Wikipedia reference markers and normalize whitespace"""
+    text_without_notes = re.sub(r"\[[^\]]*\]", "", date_text)
+    return " ".join(text_without_notes.split())
+
+
+def parse_visit_dates(date_raw, year):
+    """Return a start and end date for either a single day or a range."""
+    date_text = clean_date_text(date_raw)
+    if not date_text:
+        raise ValueError("Visit date is empty")
+
+    if any(separator in date_text for separator in ("-", "–", "—")):
+        return parse_date_range(date_text, year)
+
+    visit_date = parse_single_date(date_text, year)
+    return visit_date, visit_date
+
+
+def normalize_visit(visit):
+    """Add normalized dates to a copy of a raw visit"""
+    start_date, end_date = parse_visit_dates(visit["date_raw"], visit["year"])
+    return {
+        **visit,
+        "start_date": start_date.isoformat(),
+        "end_date": end_date.isoformat(),
+    }
