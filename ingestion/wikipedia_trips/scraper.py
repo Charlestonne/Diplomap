@@ -34,3 +34,39 @@ def fetch_wikipedia_page(page_title, language="en"):
         raise RuntimeError(data["error"])
 
     return data["parse"]
+def parse_page_qids(query, requested_titles):
+    """Map normalized/redirected API titles back to the requested names."""
+    title_changes = {
+        change["from"]: change["to"]
+        for change in query.get("normalized", []) + query.get("redirects", [])
+    }
+    pages_by_title = {page["title"]: page for page in query["pages"]}
+    results = {}
+    for requested_title in requested_titles:
+        resolved_title = requested_title
+        seen_titles = set()
+        while resolved_title in title_changes and resolved_title not in seen_titles:
+            seen_titles.add(resolved_title)
+            resolved_title = title_changes[resolved_title]
+
+        page = pages_by_title.get(resolved_title, {})
+        properties = page.get("pageprops", {})
+        qid = properties.get("wikibase_item")
+        if not page or "missing" in page:
+            status = "missing"
+        elif "invalid" in page:
+            status = "invalid_title"
+        elif "disambiguation" in properties:
+            status = "disambiguation"
+        elif page.get("ns") != 0:
+            status = "not_article"
+        elif not qid:
+            status = "no_qid"
+        else:
+            status = "resolved"
+        results[requested_title] = {
+            "qid": qid if status == "resolved" else None,
+            "resolved_title": resolved_title,
+            "status": status,
+        }
+    return results
