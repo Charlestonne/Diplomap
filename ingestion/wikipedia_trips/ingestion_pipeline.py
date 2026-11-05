@@ -23,7 +23,11 @@ def extract_saved_visits(directory, leader, year):
 
 def extract_page_visits(page, leader, year):
     """Extract raw visit records from an already loaded page"""
+    if page.get("language", "en") != "en":
+        raise ValueError("Only English Wikipedia pages are supported")
     tables = get_year_tables(page["text"], year)
+    if not tables:
+        raise ValueError(f"No trip table found for {year}")
 
     visits = []
 

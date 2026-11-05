@@ -59,7 +59,7 @@ def parse_table(table):
     required_columns = ["Country", "Areas visited", "Date(s)", "Details"]
 
     if not all(column_name in trip_dataframe.columns for column_name in required_columns):
-        return []
+        raise ValueError(f"Trip table is missing expected columns: {list(trip_dataframe.columns)}")
 
     linked_trip_rows = trip_dataframe[required_columns].to_dict(orient="records")
     return [parse_trip_row(linked_cells) for linked_cells in linked_trip_rows]
