@@ -7,7 +7,7 @@ DEFAULT_OUTPUT = Path(__file__).resolve().parents[2] / "data/raw/wikipedia"
 
 
 def save_raw_page(leader_id, source, page, output=DEFAULT_OUTPUT):
-    """Save HTML and metadata once per Wikipedia revision."""
+    """Save HTML and metadata once per Wikipedia revision"""
     html = page.get("text")
     # Validate inputs
     if not isinstance(html, str) or not html.strip():
@@ -41,3 +41,15 @@ def save_raw_page(leader_id, source, page, output=DEFAULT_OUTPUT):
     html_path.write_text(html, encoding="utf-8")
     metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",encoding="utf-8",)
     return destination
+
+
+def load_raw_page(directory):
+    """Read a saved capture and its metadata"""
+    directory = Path(directory)
+    metadata = json.loads((directory / "metadata.json").read_text(encoding="utf-8"))
+    return {
+        "text": (directory / "page.html").read_text(encoding="utf-8"),
+        "pageid": metadata["page_id"],
+        "revid": metadata["revision_id"],
+        "language": metadata["language"],
+    }
