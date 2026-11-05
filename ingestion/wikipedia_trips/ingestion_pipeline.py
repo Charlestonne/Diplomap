@@ -8,6 +8,8 @@ from .parser import get_year_tables, parse_table
 from .normalizer import normalize_visit
 from .config import load_analysis_period, DEFAULT_ANALYSIS_CONFIG
 from .storage import save_date_normalized_visits, DEFAULT_DATE_NORMALIZED_OUTPUT
+from .qid_resolver import resolve_host_country_qids
+from .qid_cache import DEFAULT_QID_CACHE
 
 
 # Extract diplomatic trips for a given leader and year from a Wikipedia page.
@@ -90,6 +92,7 @@ def normalize_and_filter_visit_dates(raw_visits, analysis_start, analysis_end):
 def normalize_saved_visit_dates(
     directory, leader, year, output=DEFAULT_DATE_NORMALIZED_OUTPUT,
     analysis_config=DEFAULT_ANALYSIS_CONFIG,
+    resolve_qids=False, qid_cache=DEFAULT_QID_CACHE, refresh_qids=False,
 ):
     """Extract a saved page, normalize dates, filter and persist the results"""
     analysis_start, analysis_end = load_analysis_period(analysis_config)
@@ -98,12 +101,16 @@ def normalize_saved_visit_dates(
     visits, anomalies, excluded_count = normalize_and_filter_visit_dates(
         raw_visits, analysis_start, analysis_end
     )
+    if resolve_qids:
+        visits = resolve_host_country_qids(visits, qid_cache, refresh_qids)
     # Separate captures and extraction years to avoid mixing their results.
     destination = (
         Path(output) / page["language"] / str(page["pageid"])
         / str(page["revid"]) / str(year)
         / f"{analysis_start}_{analysis_end}"
     )
+    if resolve_qids:
+        destination = destination / "qid_resolved"
     save_date_normalized_visits(visits, anomalies, destination)
     return {
         "output": destination,
