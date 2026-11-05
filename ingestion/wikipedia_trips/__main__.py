@@ -2,7 +2,9 @@ import argparse
 
 from .ingestion_pipeline import extract_visits, extract_saved_visits, collect_pages
 from .inventory import DEFAULT_INVENTORY
-from .storage import DEFAULT_OUTPUT
+from .config import DEFAULT_ANALYSIS_CONFIG
+from .storage import DEFAULT_OUTPUT, DEFAULT_DATE_NORMALIZED_OUTPUT
+from .ingestion_pipeline import normalize_saved_visit_dates
 
 
 def main():
@@ -14,10 +16,25 @@ def main():
     parser.add_argument("--saved-page", help="Directory containing page.html and metadata.json")
     parser.add_argument("--leader", default="Emmanuel Macron")
     parser.add_argument("--year", type=int, default=2025)
+    parser.add_argument("--normalize", action="store_true", help="Normalize visit dates and filter by the configured analysis period")
+    parser.add_argument("--normalized-output", default=DEFAULT_DATE_NORMALIZED_OUTPUT)
+    parser.add_argument("--analysis-config", default=DEFAULT_ANALYSIS_CONFIG)
     args = parser.parse_args()
+    if args.normalize and (not args.saved_page or args.collect):
+        parser.error("--normalize requires --saved-page and cannot be combined with --collect")
     if args.collect:
         for path in collect_pages(args.inventory, args.output):
             print(path)
+        return
+
+    if args.normalize:
+        summary = normalize_saved_visit_dates(
+            args.saved_page, args.leader, args.year, args.normalized_output,
+            analysis_config=args.analysis_config,
+        )
+        print(f"Extracted: {summary['extracted']}; kept: {summary['normalized']}; "
+              f"anomalies: {summary['anomalies']}; outside scope: {summary['excluded']}")
+        print(summary["output"])
         return
     
     if args.saved_page:
