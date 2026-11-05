@@ -1,5 +1,9 @@
 import os
 import time
+
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 import requests
 
 API_URL = "https://en.wikipedia.org/w/api.php" # Wikimedia API endpoint
@@ -34,6 +38,51 @@ def fetch_wikipedia_page(page_title, language="en"):
         raise RuntimeError(data["error"])
 
     return data["parse"]
+
+def fetch_page_qids(page_titles, language="en", request_interval=1.0):
+    """Resolve distinct titles in sequential batches, retaining every status"""
+    results = {}
+    unique_titles = list(dict.fromkeys(page_titles))
+    if not unique_titles:
+        return results
+    if request_interval < 0:
+        raise ValueError("Request interval cannot be negative")
+
+    # Retry temporary HTTP failures
+    retries = Retry(
+        total=3, backoff_factor=1, status_forcelist=[429, 503],
+        respect_retry_after_header=True,
+    )
+    with requests.Session() as session:
+        session.headers.update(HEADERS)
+        session.mount("https://", HTTPAdapter(max_retries=retries))
+        for offset in range(0, len(unique_titles), 50):
+            if offset:
+                time.sleep(request_interval)
+            requested_titles = unique_titles[offset:offset + 50]
+            response = session.get(
+                f"https://{language}.wikipedia.org/w/api.php",
+                params={
+                    "action": "query",
+                    "titles": "|".join(requested_titles),
+                    "prop": "pageprops",
+                    "ppprop": "wikibase_item|disambiguation",
+                    "redirects": 1,
+                    "format": "json",
+                    "formatversion": 2,
+                    "maxlag": 5,
+                },
+                timeout=30,
+            )
+            response.raise_for_status()
+            data = response.json()
+            if "error" in data:
+                # API failures (including maxlag) must not become cached misses.
+                raise RuntimeError(data["error"])
+            results.update(parse_page_qids(data["query"], requested_titles))
+    return results
+
+
 def parse_page_qids(query, requested_titles):
     """Map normalized/redirected API titles back to the requested names."""
     title_changes = {
