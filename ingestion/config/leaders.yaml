@@ -1,6 +1,7 @@
 - leader_id: macron
   leader_name: Emmanuel Macron
   leader_page: Emmanuel Macron
+  leader_language: en
   represented_country_iso3: FRA
   trips_pages:
     - title: List of international presidential trips made by Emmanuel Macron
