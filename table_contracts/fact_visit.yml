@@ -48,8 +48,12 @@ columns:
     description: Length of the visit in days, both ends included.
   - name: is_multilateral
     type: BOOLEAN
-    nullable: false
-    description: True for a multilateral event such as a summit.
+    nullable: true
+    description: >
+      Whether the trip includes documented in-person participation in a
+      multilateral diplomatic event. TRUE means confirmed participation,
+      FALSE requires explicit evidence or a documented review establishing
+      the absence of such participation; NULL means insufficient information.
   - name: matched_in_gdelt
     type: BOOLEAN
     nullable: false
@@ -79,6 +83,9 @@ columns:
     nullable: false
     description: End date plus 15 days.
 business_rules:
+  - Absence from a multilateral meeting calendar does not imply FALSE; unresolved cases remain NULL including in production.
+  - The current Wikipedia calendar enrichment produces TRUE or NULL only. It does not generate FALSE automatically.
+  - Multilateral evidence and extraction statuses are retained outside fact_visit; they do not add columns to this table.
   - Dates are inclusive. duration_days equals end minus start plus 1.
   - Windows are fixed at 15 days; the DDL enforces the arithmetic. Window overlap between visits is a derived property, handled in the KPI layer.
   - visitor_country_key must differ from host_country_key.
