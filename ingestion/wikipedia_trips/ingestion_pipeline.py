@@ -10,6 +10,8 @@ from .config import load_analysis_period, DEFAULT_ANALYSIS_CONFIG
 from .storage import save_date_normalized_visits, DEFAULT_DATE_NORMALIZED_OUTPUT
 from .qid_resolver import resolve_host_country_qids, resolve_leader_qid
 from .qid_cache import DEFAULT_QID_CACHE
+from .multilateral_matcher import annotate_multilateral_visits
+from .storage import save_multilateral_report
 
 
 # Extract diplomatic trips for a given leader and year from a Wikipedia page.
@@ -94,6 +96,7 @@ def normalize_saved_visit_dates(
     analysis_config=DEFAULT_ANALYSIS_CONFIG,
     resolve_qids=False, qid_cache=DEFAULT_QID_CACHE, refresh_qids=False,
     inventory=DEFAULT_INVENTORY,
+    include_multilateral=False,
 ):
     """Extract a saved page, normalize dates, filter and persist the results"""
     analysis_start, analysis_end = load_analysis_period(analysis_config)
@@ -110,6 +113,8 @@ def normalize_saved_visit_dates(
     if resolve_qids:
         visits = resolve_host_country_qids(visits, qid_cache, refresh_qids)
         visits = resolve_leader_qid(visits, leader_config, qid_cache, refresh_qids)
+    if include_multilateral:
+        visits, multilateral_report = annotate_multilateral_visits(visits, page, year)
     # Separate captures and extraction years to avoid mixing their results.
     destination = (
         Path(output) / page["language"] / str(page["pageid"])
@@ -118,7 +123,11 @@ def normalize_saved_visit_dates(
     )
     if resolve_qids:
         destination = destination / "qid_resolved"
+    if include_multilateral:
+        destination = destination / "multilateral"
     save_date_normalized_visits(visits, anomalies, destination)
+    if include_multilateral:
+        save_multilateral_report(multilateral_report, destination)
     return {
         "output": destination,
         "extracted": len(raw_visits),
