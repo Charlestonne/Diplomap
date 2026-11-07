@@ -23,7 +23,10 @@ def main():
     parser.add_argument("--resolve-qids", action="store_true", help="Resolve host country and leader QIDs using MediaWiki and a local cache")
     parser.add_argument("--qid-cache", default=DEFAULT_QID_CACHE)
     parser.add_argument("--refresh-qids", action="store_true", help="Refresh cached results for requested countries and leader")
+    parser.add_argument("--multilateral", action="store_true", help="Match visits against the saved page's Multilateral meetings section")
     args = parser.parse_args()
+    if args.multilateral and not args.normalize:
+        parser.error("--multilateral requires --normalize")
     if args.resolve_qids and not args.normalize:
         parser.error("--resolve-qids requires --normalize")
     if args.refresh_qids and not args.resolve_qids:
@@ -43,6 +46,7 @@ def main():
             qid_cache=args.qid_cache,
             refresh_qids=args.refresh_qids,
             inventory=args.inventory,
+            include_multilateral=args.multilateral,
         )
         print(f"Extracted: {summary['extracted']}; kept: {summary['normalized']}; "
               f"anomalies: {summary['anomalies']}; outside scope: {summary['excluded']}")
