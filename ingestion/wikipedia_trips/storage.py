@@ -67,3 +67,11 @@ def save_date_normalized_visits(visits, anomalies, directory):
             encoding="utf-8",
         )
     return directory
+
+
+def save_multilateral_report(report, directory):
+    """Keep source meetings and review items separate from date anomalies for multilateral visits"""
+    destination = Path(directory) / "multilateral_meetings.json"
+    destination.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
