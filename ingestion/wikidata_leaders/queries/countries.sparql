@@ -1,0 +1,5 @@
+# Query for country reference attributes.
+
+# Input: country QIDs
+# Useful properties :
+# P298=ISO3 code, P901= fips code (former standard)

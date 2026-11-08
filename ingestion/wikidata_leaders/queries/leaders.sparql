@@ -1,1 +1,5 @@
-# This query file will contain the versioned SPARQL query used to retrieve leader and country metadata.
+# Query for leader office statements + mandate dates
+
+# Input: leader QIDs
+# Useful properties :
+# P39 = position held, P580: start time, P582: end time,P298 : ISO3 code for countries
