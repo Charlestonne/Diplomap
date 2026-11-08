@@ -1,5 +1,28 @@
-# Query for leader office statements + mandate dates
+# Office statements and their dates. NB : not yet filtered mandates.
+# wd = entities; p = statements; ps = statement main value; pq = statement qualifiers
 
-# Input: leader QIDs
-# Useful properties :
-# P39 = position held, P580: start time, P582: end time,P298 : ISO3 code for countries
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd: <http://www.bigdata.com/rdf#>
+
+SELECT ?leader ?leaderLabel ?statement ?position ?positionLabel ?start ?end
+WHERE {
+  # Filled by the client with the leader QIDs supplied by the caller
+  VALUES ?leader { {{QIDS}} }
+
+  # Keep the statement identifier to distinguish repeated terms in the same office.
+  ?leader p:P39 ?statement.
+  ?statement ps:P39 ?position.
+
+  # Missing dates remain unbound, do not infer that the office is still held
+  OPTIONAL { ?statement pq:P580 ?start. }
+  OPTIONAL { ?statement pq:P582 ?end. }
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "en".
+  }
+}
+ORDER BY ?leader ?start ?position

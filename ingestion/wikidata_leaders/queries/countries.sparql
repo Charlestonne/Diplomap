@@ -1,5 +1,22 @@
-# Query for country reference attributes.
+# Country names and codes
+# wd = entities; wdt reads property values directly.
 
-# Input: country QIDs
-# Useful properties :
-# P298=ISO3 code, P901= fips code (former standard)
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd: <http://www.bigdata.com/rdf#>
+
+SELECT ?country ?countryLabel ?iso3 ?fips
+WHERE {
+  # Filled by the client with the country QIDs supplied by the caller
+  VALUES ?country { {{QIDS}} }
+
+  # Keep countries in the output even if a code is missing.
+  OPTIONAL { ?country wdt:P298 ?iso3. }
+  OPTIONAL { ?country wdt:P901 ?fips. }
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "en".
+  }
+}
+ORDER BY ?country
