@@ -63,6 +63,15 @@ INSERT OR REPLACE INTO quality_rule VALUES
 ('gdelt_09_mentions_invalid', 'stg_gdelt_event', 'P2', 'NumMentions missing or negative',
     $$num_mentions IS NULL OR num_mentions < 0$$);
 
+-- Resolved GDELT facts (P2), after joining the conformed dimensions.
+INSERT OR REPLACE INTO quality_rule VALUES
+('gdelt_10_date_dimension_missing', 'stg_fact_gdelt', 'P2', 'Event date is not present in dim_date',
+    $$resolved_date_key IS NULL$$),
+('gdelt_11_country_dimension_missing', 'stg_fact_gdelt', 'P2', 'Actor country is not present in dim_country',
+    $$actor1_country_key IS NULL OR actor2_country_key IS NULL$$),
+('gdelt_12_event_type_dimension_missing', 'stg_fact_gdelt', 'P2', 'CAMEO event code is not present in dim_event_type',
+    $$event_type_key IS NULL$$);
+
 -- Visits (P4), on stg_fact_visit (warehouse/dimensions_and_facts/fact_visit.sql). Mirrors the constraints of
 -- fact_visit plus the scope of the study, so that loading it never fails.
 INSERT OR REPLACE INTO quality_rule VALUES
