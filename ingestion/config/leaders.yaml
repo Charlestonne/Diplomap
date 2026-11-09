@@ -3,6 +3,7 @@
   leader_page: Emmanuel Macron
   leader_language: en
   represented_country_iso3: FRA
+  position_qids: [Q191954] # Office scope: Macron as President of France
   trips_pages:
     - title: List of international presidential trips made by Emmanuel Macron
       language: en
