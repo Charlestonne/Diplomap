@@ -53,3 +53,50 @@ CREATE TABLE IF NOT EXISTS stg_leader (
         OR (valid_to IS NOT NULL AND end_date_status = 'reported')
     )
 );
+
+CREATE TABLE IF NOT EXISTS stg_visit (
+    collection_id VARCHAR NOT NULL,
+    leader_qid VARCHAR NOT NULL,
+    office_statement_uri VARCHAR NOT NULL,
+    visitor_country_qid VARCHAR NOT NULL,
+    visitor_country_iso3 VARCHAR NOT NULL,
+    host_country_qid VARCHAR NOT NULL,
+    host_country_iso3 VARCHAR NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    duration_days INTEGER NOT NULL,
+    is_multilateral BOOLEAN,
+    wiki_language VARCHAR NOT NULL,
+    wiki_page_id BIGINT NOT NULL,
+    wiki_revision_id BIGINT NOT NULL,
+    source_table_index INTEGER NOT NULL,
+    source_row_index INTEGER NOT NULL,
+    host_country_raw VARCHAR,
+    date_raw VARCHAR,
+    areas_visited_raw VARCHAR,
+    details_raw VARCHAR,
+    source_file VARCHAR NOT NULL,
+    source_record JSON NOT NULL,
+    loaded_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (
+        collection_id, wiki_language, wiki_page_id, wiki_revision_id,
+        source_table_index, source_row_index
+    ),
+
+    CHECK (trim(collection_id) <> ''),
+    CHECK (trim(source_file) <> ''),
+    CHECK (regexp_full_match(leader_qid, 'Q[1-9][0-9]*')),
+    CHECK (regexp_full_match(office_statement_uri, 'https?://www[.]wikidata[.]org/entity/statement/.+')),
+    CHECK (regexp_full_match(visitor_country_qid, 'Q[1-9][0-9]*')),
+    CHECK (regexp_full_match(host_country_qid, 'Q[1-9][0-9]*')),
+    CHECK (regexp_full_match(visitor_country_iso3, '[A-Z]{3}')),
+    CHECK (regexp_full_match(host_country_iso3, '[A-Z]{3}')),
+    CHECK (visitor_country_qid <> host_country_qid),
+    CHECK (visitor_country_iso3 <> host_country_iso3),
+    CHECK (end_date >= start_date),
+    CHECK (duration_days >= 1 AND duration_days = end_date - start_date + 1),
+    CHECK (wiki_language = 'en'),
+    CHECK (wiki_page_id > 0 AND wiki_revision_id > 0),
+    CHECK (source_table_index > 0 AND source_row_index > 0)
+);
