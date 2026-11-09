@@ -5,6 +5,7 @@ from pathlib import Path
 
 DEFAULT_OUTPUT = Path(__file__).resolve().parents[2] / "data/raw_landing/wikidata"
 DEFAULT_NORMALIZED_OUTPUT = Path(__file__).resolve().parents[2] / "data/normalized/wikidata"
+DEFAULT_RESOLVED_OUTPUT = Path(__file__).resolve().parents[2] / "data/resolved/wikidata"
 
 
 def create_collection_directory(output=DEFAULT_OUTPUT):
@@ -52,5 +53,27 @@ def save_normalized_collection(records, review_items, manifest, directory):
     }
     for filename, content in files.items():
         (directory / filename).write_text(
+            json.dumps(content, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+
+
+def load_normalized_collection(directory):
+    """Read the completed normalized inputs needed for entity resolution."""
+    directory = Path(directory)
+    manifest = json.loads((directory / "manifest.json").read_text(encoding="utf-8"))
+    if manifest["status"] not in ("complete", "complete_with_issues"):
+        raise ValueError("Use a completed normalized collection")
+    return {
+        name: json.loads((directory / f"{name}.json").read_text(encoding="utf-8"))
+        for name in ("office_statements", "countries", "normalization_issues")
+    }
+
+
+def save_resolution_results(results, directory):
+    """Keep resolution results and review issues separate from normalized inputs."""
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    for name, content in results.items():
+        (directory / f"{name}.json").write_text(
             json.dumps(content, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
