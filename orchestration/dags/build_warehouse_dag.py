@@ -17,6 +17,46 @@ with DAG(
     start = EmptyOperator(task_id="start")
 
     @task(pool="duckdb_writer")
+    def initialize_schema_and_dimensions() -> None:
+        from pathlib import Path
+
+        import duckdb
+
+        database = Path("/data/warehouse/diplomap.duckdb")
+        schema_sql = Path("/opt/diplomap/warehouse/dimensions_and_facts/schema.sql")
+        dimensions_sql = Path("/opt/diplomap/warehouse/dimensions_and_facts/dimensions.sql")
+        expected_tables = {
+            "dim_country",
+            "dim_date",
+            "dim_event_type",
+            "dim_visit_type",
+            "dim_leader",
+            "fact_visit",
+            "fact_gdelt_event",
+        }
+        with duckdb.connect(str(database)) as connection:
+            existing = {
+                row[0]
+                for row in connection.execute(
+                    "SELECT table_name FROM information_schema.tables "
+                    "WHERE table_schema = 'main'"
+                ).fetchall()
+            }
+            if not expected_tables.issubset(existing):
+                connection.execute(schema_sql.read_text(encoding="utf-8"))
+            connection.execute(dimensions_sql.read_text(encoding="utf-8"))
+            counts = {
+                "dim_country": connection.execute("SELECT count(*) FROM dim_country").fetchone()[0],
+                "dim_date": connection.execute("SELECT count(*) FROM dim_date").fetchone()[0],
+                "dim_event_type": connection.execute("SELECT count(*) FROM dim_event_type").fetchone()[0],
+            }
+            expected_counts = {"dim_country": 233, "dim_date": 211, "dim_event_type": 310}
+            if counts != expected_counts:
+                raise RuntimeError(
+                    f"Unexpected dimension counts: got {counts}, expected {expected_counts}"
+                )
+
+    @task(pool="duckdb_writer")
     def build_gdelt_staging() -> None:
         from pathlib import Path
 
@@ -91,9 +131,28 @@ with DAG(
                 FROM stg_fact_gdelt
                 """
             )
+            expected_rows = connection.execute("SELECT count(*) FROM stg_fact_gdelt").fetchone()[0]
+            actual_rows = connection.execute("SELECT count(*) FROM fact_gdelt_event").fetchone()[0]
+            duplicate_ids = connection.execute(
+                """
+                SELECT count(*)
+                FROM (
+                    SELECT gdelt_event_id
+                    FROM fact_gdelt_event
+                    GROUP BY gdelt_event_id
+                    HAVING count(*) > 1
+                )
+                """
+            ).fetchone()[0]
+            if actual_rows != expected_rows or duplicate_ids:
+                raise RuntimeError(
+                    f"Fact row-count check failed: expected {expected_rows}, "
+                    f"loaded {actual_rows}, duplicate ids {duplicate_ids}"
+                )
 
     finish = EmptyOperator(task_id="finish")
+    dimensions = initialize_schema_and_dimensions()
     staging = build_gdelt_staging()
     quality_gate = run_gdelt_quality_gate()
     production = load_gdelt_fact()
-    start >> staging >> quality_gate >> production >> finish
+    start >> dimensions >> staging >> quality_gate >> production >> finish
