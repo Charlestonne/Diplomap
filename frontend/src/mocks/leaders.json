@@ -1,0 +1,23 @@
+[
+  {
+    "leader_id": "Q1",
+    "leader_name": "Leader A",
+    "position_title": "President",
+    "country_iso3": "FRA",
+    "country_name": "France"
+  },
+  {
+    "leader_id": "Q2",
+    "leader_name": "Leader B",
+    "position_title": "Prime Minister",
+    "country_iso3": "JPN",
+    "country_name": "Japan"
+  },
+  {
+    "leader_id": "Q3",
+    "leader_name": "Leader C",
+    "position_title": "Chancellor",
+    "country_iso3": "DEU",
+    "country_name": "Germany"
+  }
+]
