@@ -38,7 +38,10 @@ columns:
   - name: valid_to
     type: DATE
     nullable: true
-    description: Last day in office, inclusive. NULL means the office is still held.
+    description: >
+      Last day in office, inclusive. NULL means no end date is recorded and the
+      period is treated as open for visit matching. It does not independently
+      establish that the person is still in office.
 business_rules:
   - fact_visit.leader_key points to the version valid on the first day of the visit, that is valid_from <= start date and (valid_to is NULL or valid_to >= start date).
   - Periods of the same leader_id must not overlap (cross-row rule, checked by the quality gate).
