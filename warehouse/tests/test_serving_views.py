@@ -1,19 +1,21 @@
-"""Tests for v_visit_event (warehouse/views/v_visit_event.sql) on a hand-computed set.
+"""Tests for the serving views v_visit_event and v_kpi_visit (warehouse/views/) on a hand-computed set.
 
 Run from the repository root:
 
-    pytest warehouse/tests/test_v_visit_event.py
+    pytest warehouse/tests/test_serving_views.py
 
-Requires: duckdb, pytest.
+Requires: duckdb, pytest, pyyaml.
 
 France (1) visits Japan (2) twice, 2025-03-10..12 and 2025-03-20..21, so the POST window of visit 1
 (03-13..03-27) overlaps both the visit days and the PRE window of visit 2 (03-05..03-19).
-Visit 3 is a multilateral France -> Germany (3) visit.
+Visit 3 is a multilateral France -> Germany (3) visit. Visit 4 (France -> Italy, June) has no event.
 """
 
 from pathlib import Path
 
 import duckdb
+import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -33,7 +35,9 @@ INSERT INTO fact_visit VALUES
     (2, 1, 1, 2, 1, DATE '2025-03-20', DATE '2025-03-21', 2, FALSE, FALSE, 1, 1,
      DATE '2025-03-05', DATE '2025-03-19', DATE '2025-03-22', DATE '2025-04-05'),
     (3, 1, 1, 3, 1, DATE '2025-05-10', DATE '2025-05-10', 1, TRUE, FALSE, 1, 1,
-     DATE '2025-04-25', DATE '2025-05-09', DATE '2025-05-11', DATE '2025-05-25');
+     DATE '2025-04-25', DATE '2025-05-09', DATE '2025-05-11', DATE '2025-05-25'),
+    (4, 1, 1, 4, 1, DATE '2025-06-10', DATE '2025-06-10', 1, FALSE, FALSE, 1, 1,
+     DATE '2025-05-26', DATE '2025-06-09', DATE '2025-06-11', DATE '2025-06-25');
 INSERT INTO fact_gdelt_event VALUES
     (101, DATE '2025-02-23', 1, 2, 1, 'u101', 1.0, 2.0, 3),   -- first day of PRE of visit 1
     (102, DATE '2025-02-22', 1, 2, 1, 'u102', 1.0, 2.0, 3),   -- one day too early
@@ -57,11 +61,32 @@ EXPECTED = [
 ]
 
 
-def test_attribution_matches_the_hand_computation():
+# Computed by hand from the events above:
+#   visit 1  PRE {101}       POST {104, 105}
+#   visit 2  PRE {103, 104}  POST {105}
+#   visit 3  PRE {}          POST {107}
+#   visit 4  no event
+# Columns: visit, n_pre, n_post, coop_pre, coop_post, d_coop, tone_pre, tone_post, d_tone,
+#          goldstein_pre, goldstein_post, d_goldstein, is_low_volume, has_overlap
+EXPECTED_KPI = [
+    (1, 1, 2, 1.0, 0.5, -0.5, 2.0, 0.0, -2.0, 1.0, -2.0, -3.0, True, True),
+    (2, 2, 1, 0.5, 0.0, -0.5, -1.0, -1.0, 0.0, -2.0, -5.0, -3.0, True, True),
+    (3, 0, 1, None, 1.0, None, None, 1.0, None, None, 1.0, None, True, False),
+    (4, 0, 0, None, None, None, None, None, None, None, None, None, True, False),
+]
+
+
+def build():
     connection = duckdb.connect()
     connection.execute((ROOT / "warehouse" / "dimensions_and_facts" / "schema.sql").read_text())
     connection.execute(SEED)
-    connection.execute((ROOT / "warehouse" / "views" / "v_visit_event.sql").read_text())
+    for view in ("v_visit_event", "v_kpi_visit"):
+        connection.execute((ROOT / "warehouse" / "views" / f"{view}.sql").read_text())
+    return connection
+
+
+def test_attribution_matches_the_hand_computation():
+    connection = build()
     rows = connection.execute(
         "SELECT visit_key, gdelt_event_id, visit_window, day_offset FROM v_visit_event ORDER BY 1, 2"
     ).fetchall()
@@ -70,3 +95,19 @@ def test_attribution_matches_the_hand_computation():
     assert connection.execute(
         "SELECT count(*) = count(DISTINCT (visit_key, gdelt_event_id)) FROM v_visit_event"
     ).fetchone()[0]
+
+
+def test_kpi_match_the_hand_computation():
+    rows = build().execute("SELECT * FROM v_kpi_visit ORDER BY visit_key").fetchall()
+    assert rows == EXPECTED_KPI
+
+
+@pytest.mark.parametrize("view", ["v_visit_event", "v_kpi_visit"])
+def test_view_matches_its_contract(view):
+    """Names, order and types (a view reports every column as nullable, so nullability is not checked)."""
+    actual = build().execute(
+        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = ? ORDER BY ordinal_position",
+        [view],
+    ).fetchall()
+    contract = yaml.safe_load((ROOT / "table_contracts" / f"{view}.yml").read_text())
+    assert actual == [(c["name"], c["type"]) for c in contract["columns"]]
