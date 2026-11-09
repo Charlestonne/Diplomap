@@ -1,0 +1,2 @@
+# Extra Python dependencies of the Airflow image, installed with the official constraints file.
+# Intentionally empty for now: the official image already ships what the stack needs.
