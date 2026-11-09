@@ -1,0 +1,81 @@
+name: stg_leader
+type: table
+layer: staging
+grain: One accepted selected Wikidata office statement per resolved collection.
+description: >
+  Source-reported office periods retained for the configured leader scope.
+  These rows prepare dim_leader but do not reconstruct separate electoral terms.
+sources:
+  - data/resolved/wikidata/{collection_id}/office_periods.json
+primary_key: [collection_id, statement_uri]
+columns:
+  - name: collection_id
+    type: VARCHAR
+    nullable: false
+    description: Resolved collection directory name; preserved across retries.
+  - name: statement_uri
+    type: VARCHAR
+    nullable: false
+    description: Source Wikidata statement URI; referenced by stg_visit.office_statement_uri.
+  - name: leader_local_id
+    type: VARCHAR
+    nullable: false
+    description: Local leader_id from the inventory.
+  - name: leader_qid
+    type: VARCHAR
+    nullable: false
+    description: Wikidata identifier of the leader.
+  - name: leader_name
+    type: VARCHAR
+    nullable: false
+    description: Collected English leader name.
+  - name: position_qid
+    type: VARCHAR
+    nullable: false
+    description: Selected office identifier, retained through the configured position_qids.
+  - name: position_title
+    type: VARCHAR
+    nullable: true
+    description: Collected English office label, when available.
+  - name: represented_country_iso3
+    type: VARCHAR
+    nullable: false
+    description: Represented country configured in the leader inventory.
+  - name: valid_from
+    type: DATE
+    nullable: false
+    description: Inclusive source-reported first day in office.
+  - name: valid_to
+    type: DATE
+    nullable: true
+    description: Inclusive last day; NULL means no recorded end and is treated as open for matching.
+  - name: end_date_status
+    type: VARCHAR
+    nullable: false
+    description: Either reported or not_reported_open_interval, as produced by resolution.
+  - name: source_file
+    type: VARCHAR
+    nullable: false
+    description: Location of the resolved office_periods.json used for this row.
+  - name: source_record
+    type: JSON
+    nullable: false
+    description: Complete source office-period object, including raw timestamps and Wikidata provenance.
+  - name: loaded_at
+    type: TIMESTAMPTZ
+    nullable: false
+    description: UTC timestamp of the successful staging load.
+business_rules:
+  - collection_id, leader_local_id, leader_name and source_file must not be blank.
+  - leader_qid and position_qid must match ^Q[1-9][0-9]*$.
+  - statement_uri must identify a Wikidata statement under http://www.wikidata.org/entity/statement/ or its HTTPS equivalent.
+  - represented_country_iso3 must match ^[A-Z]{3}$ and reference exactly one accepted stg_country.iso3_code in the same collection.
+  - The office must belong to the configured scope used during resolution; retain inventory provenance through the collection manifest.
+  - valid_from must be a valid date; valid_to must be NULL or greater than or equal to valid_from.
+  - end_date_status must be reported when valid_to is present, and not_reported_open_interval when valid_to is NULL.
+  - Missing end dates produce a warning and do not alone reject a period; they do not prove that the office is still held.
+  - Selected periods for the same leader_qid must not overlap within a collection; inclusive shared boundary days count as overlap.
+  - Repeated statement identifiers or overlapping periods require review; no periods are merged or shortened automatically.
+  - Statements outside the configured scope remain in unselected_office_statements.json and are not staging rejections.
+  - Rejected rows retain their original content, collection, source location and rejection reasons in quarantine.
+  - Replaying the same collection replaces its accepted and quarantined rows transactionally without touching other collections.
