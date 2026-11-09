@@ -1,0 +1,33 @@
+name: v_visit
+type: view
+layer: serving
+grain: One row per visit (every row of fact_visit).
+description: >
+  The visits with their keys resolved to readable values: leader, office, countries and visit type.
+  Read by the API for /visits and /visits/{visit_key} (P1), so the backend does not join the star schema itself.
+sources: [fact_visit, dim_leader, dim_country, dim_visit_type]
+primary_key: [visit_key]
+columns:
+  - {name: visit_key, type: BIGINT, nullable: false, description: Public identifier of the visit (fact_visit).}
+  - {name: leader_id, type: VARCHAR, nullable: false, description: Wikidata QID of the leader.}
+  - {name: leader_name, type: VARCHAR, nullable: false, description: Name in the dim_leader version valid on the start date.}
+  - {name: position_title, type: VARCHAR, nullable: true, description: Office held on the start date.}
+  - {name: visitor_iso3, type: VARCHAR, nullable: false, description: ISO3 code of the country represented by the leader.}
+  - {name: visitor_country_name, type: VARCHAR, nullable: false, description: Name of that country.}
+  - {name: host_iso3, type: VARCHAR, nullable: false, description: ISO3 code of the country visited.}
+  - {name: host_country_name, type: VARCHAR, nullable: false, description: Name of that country.}
+  - {name: visit_type_label, type: VARCHAR, nullable: false, description: "One of state, working, summit, ceremony, unknown."}
+  - {name: start_date, type: DATE, nullable: false, description: First day of the visit.}
+  - {name: end_date, type: DATE, nullable: false, description: Last day of the visit.}
+  - {name: duration_days, type: INTEGER, nullable: false, description: Length in days, both ends included.}
+  - {name: is_multilateral, type: BOOLEAN, nullable: false, description: True for a multilateral event such as a summit.}
+  - {name: matched_in_gdelt, type: BOOLEAN, nullable: false, description: True when GDELT also codes the visit (CAMEO 042 or 043).}
+  - {name: pre_window_start, type: DATE, nullable: false, description: Start date minus 15 days.}
+  - {name: pre_window_end, type: DATE, nullable: false, description: Start date minus 1 day.}
+  - {name: post_window_start, type: DATE, nullable: false, description: End date plus 1 day.}
+  - {name: post_window_end, type: DATE, nullable: false, description: End date plus 15 days.}
+  - {name: wiki_page_id, type: BIGINT, nullable: false, description: Lineage. Scraped Wikipedia page.}
+  - {name: wiki_revision_id, type: BIGINT, nullable: false, description: Lineage. Revision of the page that was scraped.}
+business_rules:
+  - Same rows as fact_visit; no filter. The view does not order its rows; the API orders by start_date.
+  - The leader columns describe the office held during the visit, which may differ from the latest name served by /leaders.
