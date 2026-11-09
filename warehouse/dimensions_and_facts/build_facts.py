@@ -1,8 +1,9 @@
 """Load the fact tables: build the candidate rows, run the quality gate on them, insert the valid ones.
 
-    python warehouse/dimensions_and_facts/build_facts.py --database data/warehouse/diplomap.duckdb
+    python warehouse/dimensions_and_facts/build_facts.py --database data/warehouse/warehouse_build.duckdb
 
 Needs schema.sql, the dimensions, stg_visit (P3) and stg_gdelt_event (P2) in the database.
+Writes to the build file only; warehouse/publish.py (P1-11) publishes it as diplomap.duckdb.
 """
 
 from __future__ import annotations
@@ -42,7 +43,7 @@ def build_fact_visit(connection: duckdb.DuckDBPyConnection) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--database", type=Path, default=Path("data/warehouse/diplomap.duckdb"))
+    parser.add_argument("--database", type=Path, default=Path("data/warehouse/warehouse_build.duckdb"))
     args = parser.parse_args()
     with duckdb.connect(str(args.database)) as connection:
         print(f"fact_visit: {build_fact_visit(connection)} rows")

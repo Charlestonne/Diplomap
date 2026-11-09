@@ -1,6 +1,6 @@
 """Project the travel relationships of the warehouse into Neo4j (full rebuild).
 
-    NEO4J_PASSWORD=... python warehouse/diplomatic_graph/sync.py --database data/warehouse/diplomap.duckdb
+    NEO4J_PASSWORD=... python warehouse/diplomatic_graph/sync.py --database data/warehouse/warehouse_build.duckdb
 
 The graph is derived from fact_visit and the dimensions, and rebuilt from scratch on each run:
     (:Country {country_key, iso3, name, region})
@@ -8,6 +8,7 @@ The graph is derived from fact_visit and the dimensions, and rebuilt from scratc
     (:Leader)-[:REPRESENTS {position_title, valid_from, valid_to}]->(:Country)        one per dim_leader version
     (:Leader)-[:VISITED {n_visits, days_on_site, first_visit, last_visit}]->(:Country) one per leader and host
 Read queries of the Network view: queries.cypher, loaded with network_queries().
+Reads the build file (read-only), so the graph matches the warehouse about to be published.
 
 Requires: duckdb, and neo4j for sync() and the command line.
 Connection: NEO4J_URI (default bolt://localhost:7687), NEO4J_USER (default neo4j), NEO4J_PASSWORD.
@@ -97,7 +98,7 @@ def network_queries() -> dict[str, str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--database", type=Path, default=Path("data/warehouse/diplomap.duckdb"))
+    parser.add_argument("--database", type=Path, default=Path("data/warehouse/warehouse_build.duckdb"))
     args = parser.parse_args()
     from neo4j import GraphDatabase
 
