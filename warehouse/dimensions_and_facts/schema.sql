@@ -63,7 +63,7 @@ CREATE TABLE dim_visit_type (
 );
 
 /* SCD Type 2: one row per leader and office period. valid_to is the last day
-   in office (inclusive); NULL means the office is still held. */
+   in office (inclusive); NULL is an open interval with no recorded end date */
 CREATE TABLE dim_leader (
     leader_key               INTEGER NOT NULL PRIMARY KEY,
     leader_id                VARCHAR NOT NULL,          /* Wikidata QID */
