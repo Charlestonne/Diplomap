@@ -1,0 +1,128 @@
+name: stg_visit
+type: table
+layer: staging
+grain: One accepted visit source row per resolved collection and Wikipedia capture.
+description: >
+  Typed, entity-resolved visits before assignment of dimension and fact keys.
+  Source coordinates identify the extracted row; possible business duplicates
+  are checked separately before acceptance.
+sources:
+  - data/resolved/wikidata/{collection_id}/visits.json
+primary_key:
+  - collection_id
+  - wiki_language
+  - wiki_page_id
+  - wiki_revision_id
+  - source_table_index
+  - source_row_index
+columns:
+  - name: collection_id
+    type: VARCHAR
+    nullable: false
+    description: Resolved collection directory name; preserved across retries.
+  - name: leader_qid
+    type: VARCHAR
+    nullable: false
+    description: Wikidata identifier of the visiting leader.
+  - name: office_statement_uri
+    type: VARCHAR
+    nullable: false
+    description: Selected statement matching stg_leader.statement_uri in the same collection.
+  - name: visitor_country_qid
+    type: VARCHAR
+    nullable: false
+    description: Represented country QID, referencing stg_country in the same collection.
+  - name: visitor_country_iso3
+    type: VARCHAR
+    nullable: false
+    description: Represented ISO3, consistent with the selected office and country.
+  - name: host_country_qid
+    type: VARCHAR
+    nullable: false
+    description: Host QID, referencing stg_country in the same collection.
+  - name: host_country_iso3
+    type: VARCHAR
+    nullable: false
+    description: Host ISO3, consistent with the accepted country row.
+  - name: start_date
+    type: DATE
+    nullable: false
+    description: First day of the visit, inclusive.
+  - name: end_date
+    type: DATE
+    nullable: false
+    description: Last day of the visit, inclusive.
+  - name: duration_days
+    type: INTEGER
+    nullable: false
+    description: Difference between end and start dates plus one.
+  - name: is_multilateral
+    type: BOOLEAN
+    nullable: true
+    description: TRUE is confirmed participation; FALSE needs explicit evidence; NULL is unknown.
+  - name: wiki_language
+    type: VARCHAR
+    nullable: false
+    description: Source Wikipedia language; currently en only.
+  - name: wiki_page_id
+    type: BIGINT
+    nullable: false
+    description: Source Wikipedia page identifier.
+  - name: wiki_revision_id
+    type: BIGINT
+    nullable: false
+    description: Source Wikipedia revision identifier.
+  - name: source_table_index
+    type: INTEGER
+    nullable: false
+    description: One-based index of the selected year trip table in extraction output.
+  - name: source_row_index
+    type: INTEGER
+    nullable: false
+    description: One-based index of the extracted visit row within its selected table.
+  - name: host_country_raw
+    type: VARCHAR
+    nullable: true
+    description: Preserved original country-cell text.
+  - name: date_raw
+    type: VARCHAR
+    nullable: true
+    description: Preserved original date-cell text.
+  - name: areas_visited_raw
+    type: VARCHAR
+    nullable: true
+    description: Preserved original visited-areas text.
+  - name: details_raw
+    type: VARCHAR
+    nullable: true
+    description: Preserved original description text.
+  - name: source_file
+    type: VARCHAR
+    nullable: false
+    description: Location of the resolved visits.json used for this row.
+  - name: source_record
+    type: JSON
+    nullable: false
+    description: Complete visit object, including resolution statuses and multilateral evidence when present.
+  - name: loaded_at
+    type: TIMESTAMPTZ
+    nullable: false
+    description: UTC timestamp of the successful staging load.
+business_rules:
+  - Accept only records with resolution_status, office_resolution_status and country_resolution_status equal to resolved and an empty resolution_blockers list; validate this contract independently.
+  - collection_id and source_file must not be blank; all QIDs must match ^Q[1-9][0-9]*$ and both ISO3 codes must match ^[A-Z]{3}$.
+  - Dates must be valid and start_date must be less than or equal to end_date.
+  - start_date must belong to the inclusive analysis period used for the source extraction; a trip ending after that period is not truncated.
+  - duration_days must equal the inclusive date difference and be at least one.
+  - Both country QIDs must reference accepted stg_country rows in the same collection, with identical ISO3 values.
+  - Visitor and host countries must differ.
+  - office_statement_uri must reference exactly one accepted stg_leader row in the same collection, with the same leader_qid and represented_country_iso3 as visitor_country_iso3.
+  - The selected office must be valid on start_date, inclusively; valid_to NULL is an open end.
+  - wiki_language must be en; page, revision, table and row identifiers must be positive integers.
+  - Repeated source coordinates violate row identity; no duplicate is silently discarded.
+  - Repeated combinations of leader_qid, host_country_qid, start_date, end_date and areas_visited_raw within a collection require review, following the existing possible-duplicate rule.
+  - Preserve is_multilateral NULL; do not replace it with FALSE. Retain available evidence in source_record.
+  - Dimension keys, visit type, CAMEO mappings, GDELT matching and PRE/POST windows are deferred and not required by this staging contract.
+  - Read visits.json once; unresolved_visits.json is its review subset, not another source to append.
+  - Rejected rows retain their original content, collection, source location and rejection reasons in quarantine.
+  - Replaying the same collection replaces its accepted and quarantined rows transactionally without touching other collections.
