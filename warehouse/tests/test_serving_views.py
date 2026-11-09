@@ -1,4 +1,4 @@
-"""Tests for the serving views v_visit_event and v_kpi_visit (warehouse/views/) on a hand-computed set.
+"""Tests for the serving views v_visit, v_visit_event and v_kpi_visit (warehouse/views/) on a hand-computed set.
 
 Run from the repository root:
 
@@ -117,12 +117,37 @@ def test_attribution_matches_the_hand_computation():
     ).fetchone()[0]
 
 
+def test_v_visit_resolves_every_visit_to_readable_values():
+    connection = build()
+    rows = connection.execute(
+        "SELECT visit_key, leader_id, visitor_iso3, host_iso3, host_country_name, visit_type_label, start_date::VARCHAR "
+        "FROM v_visit ORDER BY visit_key"
+    ).fetchall()
+    assert rows == [
+        (1, "Q1", "FRA", "JPN", "Japan", "state", "2025-03-10"),
+        (2, "Q1", "FRA", "JPN", "Japan", "state", "2025-03-20"),
+        (3, "Q1", "FRA", "DEU", "Germany", "state", "2025-05-10"),
+        (4, "Q1", "FRA", "ITA", "Italy", "state", "2025-06-10"),
+        (5, "Q2", "JPN", "FRA", "France", "state", "2025-04-15"),
+    ]
+    # Every other column is copied from fact_visit unchanged.
+    assert connection.execute(
+        """
+        SELECT count(*) FROM v_visit w JOIN fact_visit v USING (visit_key)
+        WHERE (w.end_date, w.duration_days, w.is_multilateral, w.matched_in_gdelt, w.pre_window_start,
+               w.pre_window_end, w.post_window_start, w.post_window_end, w.wiki_page_id, w.wiki_revision_id)
+            = (v.end_date_key, v.duration_days, v.is_multilateral, v.matched_in_gdelt, v.pre_window_start,
+               v.pre_window_end, v.post_window_start, v.post_window_end, v.wiki_page_id, v.wiki_revision_id)
+        """
+    ).fetchone()[0] == 5
+
+
 def test_kpi_match_the_hand_computation():
     rows = build().execute("SELECT * FROM v_kpi_visit ORDER BY visit_key").fetchall()
     assert rows == EXPECTED_KPI
 
 
-@pytest.mark.parametrize("view", ["v_visit_event", "v_kpi_visit"])
+@pytest.mark.parametrize("view", ["v_visit", "v_visit_event", "v_kpi_visit"])
 def test_view_matches_its_contract(view):
     """Names, order and types (a view reports every column as nullable, so nullability is not checked)."""
     actual = build().execute(
