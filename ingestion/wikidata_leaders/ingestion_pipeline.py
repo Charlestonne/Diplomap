@@ -11,7 +11,11 @@ from .storage import (
     create_collection_directory,
     save_collection_manifest,
     save_query_response,
+    DEFAULT_NORMALIZED_OUTPUT,
+    load_saved_query_response,
+    save_normalized_collection,
 )
+from .normalizer import normalize_response
 
 
 def extract_distinct_qids(visits, field):
@@ -147,3 +151,48 @@ def collect_wikidata_from_visits(
     manifest["finished_at"] = datetime.now(timezone.utc).isoformat()
     save_collection_manifest(manifest, directory)
     return directory
+
+
+def normalize_saved_wikidata_collection(collection_path, output=DEFAULT_NORMALIZED_OUTPUT):
+    """Normalize a previously completed collection without calling the SPARQL endpoint"""
+    collection_directory = Path(collection_path).resolve()
+    collection_manifest = json.loads(
+        (collection_directory / "manifest.json").read_text(encoding="utf-8")
+    )
+    if collection_manifest["status"] != "complete":
+        raise ValueError("Normalize a complete collection, not a failed or interrupted run")
+    completed_batches = collection_manifest["completed_batches"]
+    if (len(completed_batches) != collection_manifest["planned_batches"]
+            or len(set(completed_batches)) != len(completed_batches)):
+        raise ValueError("Collection manifest has an inconsistent batch count")
+
+    records = {"leaders": [], "countries": []}
+    review_items = []
+    for batch_directory in completed_batches:
+        if re.fullmatch(r"(leaders|countries)/[0-9]{3,}", batch_directory) is None:
+            raise ValueError(f"Unrecognized collection batch: {batch_directory!r}")
+        family = batch_directory.split("/")[0]
+        directory = collection_directory / batch_directory
+        response, metadata = load_saved_query_response(directory)
+        source = {
+            "source_response": str(directory / "response.json"),
+            "source_query": str(directory / "query.sparql"),
+            "fetched_at": metadata["fetched_at"],
+        }
+        normalized_rows, batch_issues = normalize_response(response, family, source)
+        records[family].extend(normalized_rows)
+        review_items.extend(batch_issues)
+
+    manifest = {
+        "source_collection": str(collection_directory),
+        "normalized_at": datetime.now(timezone.utc).isoformat(),
+        "status": "complete_with_issues" if review_items else "complete",
+        "office_statement_count": len(records["leaders"]),
+        "country_row_count": len(records["countries"]),
+        "issue_count": len(review_items),
+    }
+    destination = Path(output) / collection_directory.name
+    if destination.resolve() == collection_directory:
+        raise ValueError("Normalized output must not overwrite the raw collection")
+    save_normalized_collection(records, review_items, manifest, destination)
+    return destination
