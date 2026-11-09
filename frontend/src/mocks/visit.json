@@ -1,0 +1,158 @@
+{
+  "2": {
+    "visit_key": 2,
+    "leader_id": "Q1",
+    "leader_name": "Leader A",
+    "visitor_country": {
+      "iso3_code": "FRA",
+      "country_name": "France"
+    },
+    "host_country": {
+      "iso3_code": "IND",
+      "country_name": "India"
+    },
+    "visit_type_label": "working",
+    "start_date_key": "2025-02-10",
+    "end_date_key": "2025-02-11",
+    "duration_days": 2,
+    "is_multilateral": false,
+    "matched_in_gdelt": false,
+    "position_title": "President",
+    "pre_window_start": "2025-01-26",
+    "pre_window_end": "2025-02-09",
+    "post_window_start": "2025-02-12",
+    "post_window_end": "2025-02-26",
+    "wiki_page_id": 1002,
+    "wiki_revision_id": 5002
+  },
+  "1": {
+    "visit_key": 1,
+    "leader_id": "Q1",
+    "leader_name": "Leader A",
+    "visitor_country": {
+      "iso3_code": "FRA",
+      "country_name": "France"
+    },
+    "host_country": {
+      "iso3_code": "JPN",
+      "country_name": "Japan"
+    },
+    "visit_type_label": "state",
+    "start_date_key": "2025-03-10",
+    "end_date_key": "2025-03-12",
+    "duration_days": 3,
+    "is_multilateral": false,
+    "matched_in_gdelt": true,
+    "position_title": "President",
+    "pre_window_start": "2025-02-23",
+    "pre_window_end": "2025-03-09",
+    "post_window_start": "2025-03-13",
+    "post_window_end": "2025-03-27",
+    "wiki_page_id": 1001,
+    "wiki_revision_id": 5001
+  },
+  "3": {
+    "visit_key": 3,
+    "leader_id": "Q2",
+    "leader_name": "Leader B",
+    "visitor_country": {
+      "iso3_code": "JPN",
+      "country_name": "Japan"
+    },
+    "host_country": {
+      "iso3_code": "FRA",
+      "country_name": "France"
+    },
+    "visit_type_label": "working",
+    "start_date_key": "2025-03-20",
+    "end_date_key": "2025-03-21",
+    "duration_days": 2,
+    "is_multilateral": false,
+    "matched_in_gdelt": true,
+    "position_title": "Prime Minister",
+    "pre_window_start": "2025-03-05",
+    "pre_window_end": "2025-03-19",
+    "post_window_start": "2025-03-22",
+    "post_window_end": "2025-04-05",
+    "wiki_page_id": 1003,
+    "wiki_revision_id": 5003
+  },
+  "6": {
+    "visit_key": 6,
+    "leader_id": "Q3",
+    "leader_name": "Leader C",
+    "visitor_country": {
+      "iso3_code": "DEU",
+      "country_name": "Germany"
+    },
+    "host_country": {
+      "iso3_code": "JPN",
+      "country_name": "Japan"
+    },
+    "visit_type_label": "state",
+    "start_date_key": "2025-04-14",
+    "end_date_key": "2025-04-15",
+    "duration_days": 2,
+    "is_multilateral": false,
+    "matched_in_gdelt": true,
+    "position_title": "Chancellor",
+    "pre_window_start": "2025-03-30",
+    "pre_window_end": "2025-04-13",
+    "post_window_start": "2025-04-16",
+    "post_window_end": "2025-04-30",
+    "wiki_page_id": 1006,
+    "wiki_revision_id": 5006
+  },
+  "4": {
+    "visit_key": 4,
+    "leader_id": "Q3",
+    "leader_name": "Leader C",
+    "visitor_country": {
+      "iso3_code": "DEU",
+      "country_name": "Germany"
+    },
+    "host_country": {
+      "iso3_code": "BRA",
+      "country_name": "Brazil"
+    },
+    "visit_type_label": "state",
+    "start_date_key": "2025-05-05",
+    "end_date_key": "2025-05-06",
+    "duration_days": 2,
+    "is_multilateral": false,
+    "matched_in_gdelt": false,
+    "position_title": "Chancellor",
+    "pre_window_start": "2025-04-20",
+    "pre_window_end": "2025-05-04",
+    "post_window_start": "2025-05-07",
+    "post_window_end": "2025-05-21",
+    "wiki_page_id": 1004,
+    "wiki_revision_id": 5004
+  },
+  "5": {
+    "visit_key": 5,
+    "leader_id": "Q1",
+    "leader_name": "Leader A",
+    "visitor_country": {
+      "iso3_code": "FRA",
+      "country_name": "France"
+    },
+    "host_country": {
+      "iso3_code": "DEU",
+      "country_name": "Germany"
+    },
+    "visit_type_label": "summit",
+    "start_date_key": "2025-06-02",
+    "end_date_key": "2025-06-02",
+    "duration_days": 1,
+    "is_multilateral": true,
+    "matched_in_gdelt": false,
+    "position_title": "President",
+    "pre_window_start": "2025-05-18",
+    "pre_window_end": "2025-06-01",
+    "post_window_start": "2025-06-03",
+    "post_window_end": "2025-06-17",
+    "wiki_page_id": 1005,
+    "wiki_revision_id": 5005
+  }
+}

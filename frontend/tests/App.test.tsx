@@ -32,10 +32,18 @@ test("a window without events shows dashes, not zeros", async () => {
   expect(await screen.findByRole("row", { name: "Cooperative share — — —" })).toBeTruthy();
 });
 
-test("calls the API when VITE_API_URL is set", async () => {
+test("an unknown visit answers 404 like the API", async () => {
+  await expect(api.visitKpis(999)).rejects.toThrow("GET /visits/999/kpis: 404");
+});
+
+test("calls the routes of the P1-12 contract when VITE_API_URL is set", async () => {
   vi.stubEnv("VITE_API_URL", "http://api.test");
   const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => [] });
   vi.stubGlobal("fetch", fetchMock);
-  expect(await api.visits("Q 1")).toEqual([]);
-  expect(fetchMock).toHaveBeenCalledWith("http://api.test/leaders/Q%201/visits");
+  await api.visits("Q1");
+  await api.visitEvents(7);
+  expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+    "http://api.test/visits?leader_id=Q1",
+    "http://api.test/visits/7/events",
+  ]);
 });
