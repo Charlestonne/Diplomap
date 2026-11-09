@@ -1,0 +1,56 @@
+name: stg_country
+type: table
+layer: staging
+grain: One accepted country per resolved Wikidata collection and country QID.
+description: >
+  Collected country identifiers and available codes, before dimension loading.
+  This table contains no surrogate keys or inferred CAMEO crosswalk.
+sources:
+  - data/resolved/wikidata/{collection_id}/countries.json
+primary_key: [collection_id, country_qid]
+unique: [[collection_id, iso3_code], [collection_id, fips_code]]
+columns:
+  - name: collection_id
+    type: VARCHAR
+    nullable: false
+    description: Resolved collection directory name; preserved across retries.
+  - name: country_qid
+    type: VARCHAR
+    nullable: false
+    description: Wikidata country or territory QID from country_qid.
+  - name: country_name
+    type: VARCHAR
+    nullable: false
+    description: English country name from country_name.
+  - name: iso3_code
+    type: VARCHAR
+    nullable: false
+    description: Collected ISO 3166 alpha-3 code; missing values require review.
+  - name: fips_code
+    type: VARCHAR
+    nullable: true
+    description: Collected FIPS 10-4 code, when available.
+  - name: source_file
+    type: VARCHAR
+    nullable: false
+    description: Location of the resolved countries.json used for this row.
+  - name: source_record
+    type: JSON
+    nullable: false
+    description: Complete resolved country object, including all source_records.
+  - name: loaded_at
+    type: TIMESTAMPTZ
+    nullable: false
+    description: UTC timestamp of the successful staging load.
+business_rules:
+  - Accept only records with reference_status equal to checked, after validating this contract.
+  - collection_id, country_name and source_file must not be blank.
+  - country_qid must match ^Q[1-9][0-9]*$.
+  - iso3_code must match ^[A-Z]{3}$; fips_code must be NULL or match ^[A-Z]{2}$.
+  - Non-NULL ISO3 and FIPS codes must not identify several country QIDs within the same collection.
+  - Conflicting or duplicate candidate rows must be reviewed; never select an arbitrary row or silently drop a copy.
+  - Missing ISO3 is a rejection, not a reason to infer a code from the country name or another entity.
+  - FIPS may remain NULL; CAMEO codes and region are deferred and are not columns in this initial staging contract.
+  - Keep all normalized source rows in source_record, including response/query locations and binding indices.
+  - Rejected rows retain their original content, collection, source location and rejection reasons in quarantine.
+  - Replaying the same collection replaces its accepted and quarantined rows transactionally without touching other collections.
