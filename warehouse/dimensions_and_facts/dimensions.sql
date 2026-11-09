@@ -2,23 +2,59 @@
 -- The source files are mounted at /opt/diplomap/DB in the Airflow image.
 
 CREATE OR REPLACE TEMP TABLE dim_country_source AS
-SELECT row_number() OVER (ORDER BY code)::INTEGER AS country_key,
-       label AS country_name,
-       code AS iso3_code,
-       NULL::VARCHAR AS fips_code,
-       code AS cameo_code,
-       NULL::VARCHAR AS region
-FROM read_csv(
-    '/opt/diplomap/DB/CAMEO.country.txt',
-    delim = '\t',
-    header = true,
-    columns = {'CODE': 'VARCHAR', 'LABEL': 'VARCHAR'}
+WITH cameo AS (
+    SELECT code AS cameo_code,
+           label AS cameo_name,
+           CASE code
+               WHEN 'TMP' THEN 'TLS'
+               WHEN 'IMY' THEN 'IMN'
+               WHEN 'MTN' THEN 'MNE'
+               WHEN 'ROM' THEN 'ROU'
+               ELSE code
+           END AS iso3_code
+    FROM read_csv(
+        '/opt/diplomap/DB/CAMEO.country.txt',
+        delim = '\t',
+        header = true,
+        columns = {'CODE': 'VARCHAR', 'LABEL': 'VARCHAR'}
+    )
+    WHERE code NOT IN (
+        'WSB', 'BAG', 'GZS', 'AFR', 'ASA', 'BLK', 'CRB', 'CAU', 'CFR', 'CAS',
+        'CEU', 'EIN', 'EAF', 'EEU', 'EUR', 'LAM', 'MEA', 'MDT', 'NAF', 'NMR',
+        'PGS', 'SCN', 'SAM', 'SAS', 'SEA', 'SAF', 'WAF', 'WST', 'ANT'
+    )
+),
+iso AS (
+    SELECT "alpha-3" AS iso3_code,
+           name AS country_name,
+           region
+    FROM read_csv(
+        '/opt/diplomap/DB/ISO.country.csv',
+        delim = ',',
+        header = true,
+        columns = {
+            'name': 'VARCHAR',
+            'alpha-2': 'VARCHAR',
+            'alpha-3': 'VARCHAR',
+            'country-code': 'VARCHAR',
+            'iso_3166-2': 'VARCHAR',
+            'region': 'VARCHAR',
+            'sub-region': 'VARCHAR',
+            'intermediate-region': 'VARCHAR',
+            'region-code': 'VARCHAR',
+            'sub-region-code': 'VARCHAR',
+            'intermediate-region-code': 'VARCHAR'
+        }
+    )
 )
-WHERE code NOT IN (
-    'WSB', 'BAG', 'GZS', 'AFR', 'ASA', 'BLK', 'CRB', 'CAU', 'CFR', 'CAS',
-    'CEU', 'EIN', 'EAF', 'EEU', 'EUR', 'LAM', 'MEA', 'MDT', 'NAF', 'NMR',
-    'PGS', 'SCN', 'SAM', 'SAS', 'SEA', 'SAF', 'WAF', 'WST'
-);
+SELECT row_number() OVER (ORDER BY cameo.iso3_code)::INTEGER AS country_key,
+       iso.country_name,
+       iso.iso3_code,
+       NULL::VARCHAR AS fips_code,
+       cameo.cameo_code,
+       iso.region
+FROM cameo
+JOIN iso ON iso.iso3_code = cameo.iso3_code;
 
 UPDATE dim_country AS target
 SET country_name = source.country_name,
