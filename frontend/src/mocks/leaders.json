@@ -1,0 +1,47 @@
+[
+  {
+    "leader_id": "Q1",
+    "leader_name": "Leader A",
+    "offices": [
+      {
+        "position_title": "President",
+        "represented_country": {
+          "iso3_code": "FRA",
+          "country_name": "France"
+        },
+        "valid_from": "2022-05-01",
+        "valid_to": null
+      }
+    ]
+  },
+  {
+    "leader_id": "Q2",
+    "leader_name": "Leader B",
+    "offices": [
+      {
+        "position_title": "Prime Minister",
+        "represented_country": {
+          "iso3_code": "JPN",
+          "country_name": "Japan"
+        },
+        "valid_from": "2024-10-01",
+        "valid_to": null
+      }
+    ]
+  },
+  {
+    "leader_id": "Q3",
+    "leader_name": "Leader C",
+    "offices": [
+      {
+        "position_title": "Chancellor",
+        "represented_country": {
+          "iso3_code": "DEU",
+          "country_name": "Germany"
+        },
+        "valid_from": "2025-01-01",
+        "valid_to": null
+      }
+    ]
+  }
+]
