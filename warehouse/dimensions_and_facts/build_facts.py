@@ -24,6 +24,11 @@ FACT_VISIT_SQL = HERE / "fact_visit.sql"
 def build_fact_visit(connection: duckdb.DuckDBPyConnection) -> int:
     """Rebuild fact_visit from stg_visit and return its row count."""
     connection.execute(FACT_VISIT_SQL.read_text())
+    return load_fact_visit(connection)
+
+
+def load_fact_visit(connection: duckdb.DuckDBPyConnection) -> int:
+    """Run the visit_* quality rules on stg_fact_visit, then replace fact_visit with the valid rows."""
     gate.run(connection, ["stg_fact_visit"])
     connection.execute("DELETE FROM fact_visit")
     # visit_key: deterministic order, so the same input always gives the same keys.
