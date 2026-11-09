@@ -9,8 +9,8 @@ The graph is derived from fact_visit and the dimensions, and rebuilt from scratc
     (:Leader)-[:VISITED {n_visits, days_on_site, first_visit, last_visit}]->(:Country) one per leader and host
 Read queries of the Network view: queries.cypher, loaded with network_queries().
 
-Requires: duckdb, neo4j. Connection: NEO4J_URI (default bolt://localhost:7687), NEO4J_USER (default neo4j),
-NEO4J_PASSWORD.
+Requires: duckdb, and neo4j for sync() and the command line.
+Connection: NEO4J_URI (default bolt://localhost:7687), NEO4J_USER (default neo4j), NEO4J_PASSWORD.
 """
 
 from __future__ import annotations
@@ -21,7 +21,6 @@ import re
 from pathlib import Path
 
 import duckdb
-from neo4j import Driver, GraphDatabase
 
 QUERIES_CYPHER = Path(__file__).with_name("queries.cypher")
 
@@ -73,7 +72,7 @@ def export(connection: duckdb.DuckDBPyConnection) -> dict[str, list[dict]]:
     return rows
 
 
-def sync(connection: duckdb.DuckDBPyConnection, driver: Driver) -> dict[str, int]:
+def sync(connection: duckdb.DuckDBPyConnection, driver: neo4j.Driver) -> dict[str, int]:
     """Replace the Leader/Country graph with the current warehouse content; return the row count per type."""
     rows = export(connection)
     with driver.session() as session:
@@ -100,6 +99,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--database", type=Path, default=Path("data/warehouse/diplomap.duckdb"))
     args = parser.parse_args()
+    from neo4j import GraphDatabase
+
     auth = (os.environ.get("NEO4J_USER", "neo4j"), os.environ["NEO4J_PASSWORD"])
     with duckdb.connect(str(args.database), read_only=True) as connection, \
             GraphDatabase.driver(os.environ.get("NEO4J_URI", "bolt://localhost:7687"), auth=auth) as driver:
