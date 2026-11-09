@@ -1,6 +1,7 @@
-"""Create the serving views on top of fact_visit and fact_gdelt_event.
+"""Create the serving views on top of fact_visit and fact_gdelt_event, in the build file
+(warehouse/publish.py publishes it as diplomap.duckdb).
 
-    python warehouse/views/build_views.py --database data/warehouse/diplomap.duckdb
+    python warehouse/views/build_views.py --database data/warehouse/warehouse_build.duckdb
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ def build_views(connection: duckdb.DuckDBPyConnection) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--database", type=Path, default=Path("data/warehouse/diplomap.duckdb"))
+    parser.add_argument("--database", type=Path, default=Path("data/warehouse/warehouse_build.duckdb"))
     args = parser.parse_args()
     with duckdb.connect(str(args.database)) as connection:
         build_views(connection)

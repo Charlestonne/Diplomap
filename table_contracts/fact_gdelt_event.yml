@@ -1,10 +1,10 @@
 name: fact_gdelt_event
 type: table
 layer: production
-grain: One row is one GDELT event between the visiting country and the host country of at least one visit (either order).
+grain: One row is one GDELT event between two different states.
 description: >
-  Media-coded interactions from the GDELT 2.0 Events files, restricted to country
-  pairs that appear in fact_visit.
+  Media-coded interactions between two states from the GDELT 2.0 Events files. The table is not
+  restricted to the visitor-host pairs of fact_visit: that filter is applied in v_visit_event (C-02).
 sources: [GDELT 2.0 Events (zipped tab-separated files, 61 columns)]
 primary_key: [gdelt_event_id]
 columns:
@@ -51,7 +51,7 @@ columns:
 business_rules:
   - Duplicates of GLOBALEVENTID are removed and counted by the quality gate.
   - Events with a blank actor country code cannot form a country pair and are excluded; the exclusion rate must be published in the quality report.
-  - The two actor countries must differ (DDL check). Events whose pair is not a visitor-host pair of fact_visit are not loaded.
+  - The two actor countries must differ (DDL check). Every event between two states is loaded; v_visit_event keeps those of the visitor-host pairs (C-02).
   - The GDELT codebook marks avg_tone and num_mentions as legacy fields that describe only the first report of the event in its first 15-minute file. Delta indicators built on them describe the tone of that first article, not of all the coverage.
   - Goldstein depends on the event type, not on the severity of the specific event (codebook).
   - Events outside the date range of dim_date are quarantined.
