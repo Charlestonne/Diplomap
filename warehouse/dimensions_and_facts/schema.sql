@@ -105,7 +105,7 @@ CREATE TABLE fact_visit (
     CHECK (post_window_end   = end_date_key + 15)
 );
 
-/* Grain: one GDELT event between the visiting and the host country (either order). */
+/* Grain: one GDELT event between two different states. The visitor-host filter is in v_visit_event (C-02). */
 CREATE TABLE fact_gdelt_event (
     gdelt_event_id      BIGINT  NOT NULL PRIMARY KEY,       /* GLOBALEVENTID */
     event_date_key      DATE    NOT NULL REFERENCES dim_date (date_key),
