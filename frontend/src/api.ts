@@ -7,7 +7,29 @@ import visit from "./mocks/visit.json";
 import visitEvents from "./mocks/visit_events.json";
 import visitKpis from "./mocks/visit_kpis.json";
 import visits from "./mocks/visits.json";
+import { useEffect, useState } from "react";
 import type { Leader, Network, VisitDetail, VisitEvent, VisitKpis, VisitSummary } from "./types";
+
+// Loads `load()` when `key` changes (not on each new `load` closure); a null `load` loads nothing.
+export function useApi<T>(load: (() => Promise<T>) | null, key: string) {
+  const [state, setState] = useState<{ data?: T; error?: string }>({});
+  useEffect(() => {
+    if (!load) return;
+    let live = true;
+    setState({});
+    load().then(
+      (data) => live && setState({ data }),
+      (error: Error) => live && setState({ error: error.message }),
+    );
+    return () => {
+      live = false;
+    };
+  }, [key]);
+  return state;
+}
+
+// True when the app answers from src/mocks/ (no VITE_API_URL): the header then says the data is illustrative.
+export const MOCK = !import.meta.env.VITE_API_URL;
 
 async function get<T>(path: string, mock: () => T): Promise<T> {
   const base = import.meta.env.VITE_API_URL;
