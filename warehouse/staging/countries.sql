@@ -81,3 +81,26 @@ WHERE fips_code IN (
     HAVING count(DISTINCT country_qid) > 1
 );
 
+
+-- Keep the full rejected record alongside each reason
+-- NB : several rows here can describe different problems on the same candidate.
+CREATE OR REPLACE TEMP TABLE rejected_countries AS
+SELECT
+    issue.candidate_row_id,
+    country.*,
+    issue.rejection_reason
+FROM country_candidates AS country
+JOIN country_issues AS issue ON issue.candidate_row_id = country.rowid;
+
+-- Accept a candidate only when no problem refers to its source row
+CREATE OR REPLACE TEMP TABLE accepted_countries AS
+SELECT country.*
+FROM country_candidates AS country
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM country_issues AS issue
+    WHERE issue.candidate_row_id = country.rowid
+);
+
+-- These tables are temporary preparation results. Persistent staging insertion,
+-- collection metadata and quarantine writes will be added with the loader.
