@@ -1,0 +1,46 @@
+name: stg_quarantine
+type: table
+layer: staging
+grain: One rejection reason per source row, target table and resolved collection.
+description: >
+  Rejected records are preserved alongside accepted staging data. A record with
+  several problems appears once per reason; count distinct source rows to count
+  rejected records. This initial loader populates country rejections only.
+sources:
+  - Rejected candidates produced by staging SQL.
+primary_key: [collection_id, target_table, source_row_index, rejection_reason]
+columns:
+  - name: collection_id
+    type: VARCHAR
+    nullable: false
+    description: Resolved collection directory name; stable across retries.
+  - name: target_table
+    type: VARCHAR
+    nullable: false
+    description: Intended staging table, currently stg_country.
+  - name: source_row_index
+    type: BIGINT
+    nullable: false
+    description: One-based index of the record in the input JSON array.
+  - name: rejection_reason
+    type: VARCHAR
+    nullable: false
+    description: Explicit machine-readable reason, such as missing_or_invalid_iso3.
+  - name: source_file
+    type: VARCHAR
+    nullable: false
+    description: Location of the input JSON file.
+  - name: source_record
+    type: JSON
+    nullable: false
+    description: Complete original object; preserve it even if its QID is absent.
+  - name: loaded_at
+    type: TIMESTAMPTZ
+    nullable: false
+    description: Load transaction timestamp.
+business_rules:
+  - All text identifiers and rejection reasons must be nonblank; source_row_index must be positive.
+  - Preserve every rejected source object and every applicable reason; never deduplicate records by QID.
+  - A record with several reasons is one rejected record, not several rejected countries.
+  - Replace only the selected collection and target table's rejections on replay.
+  - Accepted staging writes and associated quarantine writes must commit or roll back together.
