@@ -69,3 +69,48 @@ def validate_collection(collection_path):
             raise ValueError(f"{filename} does not match {count_name} in the manifest")
     return directory
 
+def blank(values):
+    return values.isna() | values.astype(str).str.strip().eq("")
+
+
+def matches(values, pattern):
+    return values.fillna("").astype(str).map(lambda value: bool(pattern.fullmatch(value)))
+
+
+def duplicated_values(frame, column):
+    return ~blank(frame[column]) & frame.duplicated(column, keep=False)
+
+
+def conflicting_codes(frame, column):
+    non_empty = frame.loc[~blank(frame[column]), [column, "country_qid"]]
+    conflicts = non_empty.groupby(column)["country_qid"].nunique()
+    return frame[column].isin(conflicts[conflicts.gt(1)].index)
+
+def add_reason(frame, condition, reason):
+    """Append one review reason to each row selected by a boolean condition"""
+    for index in frame.index[condition.fillna(True)]:
+        frame.at[index, "rejection_reasons"].append(reason)
+
+
+def split_candidates(frame):
+    rejected = frame[frame["rejection_reasons"].map(bool)].copy()
+    accepted = frame[~frame["rejection_reasons"].map(bool)].copy()
+    return CandidateRows(accepted=accepted, rejected=rejected)
+
+def validate_countries(candidates):
+    """Apply the stg_country rules without dropping the rows that fail them"""
+    frame = candidates.copy()
+    add_reason(frame, frame["reference_status"].ne("checked"), "country_not_checked")
+    add_reason(frame, ~matches(frame["country_qid"], QID_PATTERN), "invalid_country_qid")
+    add_reason(frame, blank(frame["country_name"]), "missing_country_name")
+    add_reason(frame, ~matches(frame["iso3_code"], ISO3_PATTERN), "missing_or_invalid_iso3")
+    add_reason(
+        frame,
+        frame["fips_code"].notna() & ~matches(frame["fips_code"], FIPS_PATTERN),
+        "invalid_fips",
+    )
+    add_reason(frame, duplicated_values(frame, "country_qid"), "duplicate_country_qid")
+    add_reason(frame, conflicting_codes(frame, "iso3_code"), "conflicting_iso3_code")
+    add_reason(frame, conflicting_codes(frame, "fips_code"), "conflicting_fips_code")
+    return split_candidates(frame)
+
