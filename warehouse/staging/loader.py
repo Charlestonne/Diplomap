@@ -183,3 +183,64 @@ def validate_leaders(candidates, accepted_countries):
     add_reason(frame, duplicated_values(frame, "statement_uri"), "duplicate_statement_uri")
     add_overlapping_office_reason(frame)
     return split_candidates(frame)
+
+def positive_integers(values):
+    numeric_values = pd.to_numeric(values, errors="coerce")
+    return numeric_values.notna() & numeric_values.gt(0) & numeric_values.mod(1).eq(0)
+
+
+def matches_country(frame, role, countries):
+    expected = countries.set_index("country_qid")["iso3_code"]
+    return frame[f"{role}_country_qid"].map(expected).eq(frame[f"{role}_country_iso3"])
+
+
+def matches_leader(visits, leaders):
+    leader_lookup = leaders.set_index("statement_uri")
+    return (
+        visits["office_statement_uri"].map(leader_lookup["leader_qid"]).eq(visits["leader_qid"])
+        & visits["office_statement_uri"].map(leader_lookup["represented_country_iso3"]).eq(visits["visitor_country_iso3"])
+    )
+
+
+def office_valid_on_visit_start(visits, leaders):
+    leader_lookup = leaders.set_index("statement_uri")
+    visit_date = pd.to_datetime(visits["start_date"], errors="coerce")
+    valid_from = pd.to_datetime(visits["office_statement_uri"].map(leader_lookup["valid_from"]), errors="coerce")
+    valid_to = pd.to_datetime(visits["office_statement_uri"].map(leader_lookup["valid_to"]), errors="coerce")
+    return visit_date.ge(valid_from) & (valid_to.isna() | visit_date.le(valid_to))
+
+
+def validate_visits(candidates, accepted_countries, accepted_leaders):
+    """Validate fully resolved visits and the references needed by staging"""
+    frame = candidates.copy()
+    add_reason(frame, frame["resolution_status"].ne("resolved"), "visit_not_resolved")
+    add_reason(frame, frame["office_resolution_status"].ne("resolved"), "office_not_resolved")
+    add_reason(frame, frame["country_resolution_status"].ne("resolved"), "country_not_resolved")
+    add_reason(frame, frame["resolution_blockers"].map(bool), "resolution_blockers_present")
+    for column, reason in (
+        ("leader_qid", "invalid_leader_qid"),
+        ("visitor_country_qid", "invalid_visitor_country_qid"),
+        ("host_country_qid", "invalid_host_country_qid"),
+    ):
+        add_reason(frame, ~matches(frame[column], QID_PATTERN), reason)
+    add_reason(frame, ~matches(frame["visitor_country_iso3"], ISO3_PATTERN), "invalid_visitor_country_iso3")
+    add_reason(frame, ~matches(frame["host_country_iso3"], ISO3_PATTERN), "invalid_host_country_iso3")
+    add_reason(frame, ~matches(frame["office_statement_uri"], STATEMENT_PATTERN), "invalid_statement_uri")
+    add_date_reasons(frame, "start_date", "end_date")
+    dates = date_columns(frame, "start_date", "end_date")
+    expected_duration = (dates["end_date"] - dates["start_date"]).dt.days + 1
+    add_reason(frame, frame["duration_days"].ne(expected_duration) | frame["duration_days"].lt(1), "invalid_duration")
+    add_reason(frame, frame["visitor_country_qid"].eq(frame["host_country_qid"]), "same_visitor_and_host")
+    add_reason(frame, frame["wiki_language"].ne("en"), "unsupported_wiki_language")
+    for column in ("wiki_page_id", "wiki_revision_id", "source_table_index", "source_row_index"):
+        add_reason(frame, ~positive_integers(frame[column]), f"invalid_{column}")
+    add_reason(frame, ~matches_country(frame, "visitor", accepted_countries), "unknown_visitor_country")
+    add_reason(frame, ~matches_country(frame, "host", accepted_countries), "unknown_host_country")
+    add_reason(frame, ~matches_leader(frame, accepted_leaders), "unknown_or_inconsistent_office")
+    add_reason(frame, ~office_valid_on_visit_start(frame, accepted_leaders), "office_not_valid_on_visit_date")
+    identity = ["wiki_language", "wiki_page_id", "wiki_revision_id", "source_table_index", "source_row_index"]
+    add_reason(frame, frame.duplicated(identity, keep=False), "duplicate_source_coordinates")
+    business_key = ["leader_qid", "host_country_qid", "start_date", "end_date", "areas_visited_raw"]
+    add_reason(frame, frame.duplicated(business_key, keep=False), "possible_duplicate_visit")
+    return split_candidates(frame)
+
