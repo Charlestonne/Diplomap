@@ -69,6 +69,30 @@ def validate_collection(collection_path):
             raise ValueError(f"{filename} does not match {count_name} in the manifest")
     return directory
 
+
+def load_staging_collection(collection_path, database_path=DEFAULT_DATABASE):
+    """Replace a collection's staging rows atomically and return load counts"""
+    collection_path = validate_collection(collection_path)
+    collection_id = collection_path.name
+
+    countries = validate_countries(read_records(collection_path, "countries"))
+    leaders = validate_leaders(read_records(collection_path, "office_periods"), countries.accepted)
+    visits = validate_visits(read_records(collection_path, "visits"), countries.accepted, leaders.accepted)
+
+    with open_database(database_path) as connection:
+        connection.execute("BEGIN TRANSACTION")
+        try:
+            create_staging_tables(connection)
+            replace_collection_rows(connection, collection_id, countries, leaders, visits)
+            summary = build_summary(collection_id, countries, leaders, visits)
+            connection.execute("COMMIT")
+        except Exception:
+            connection.execute("ROLLBACK")
+            raise
+
+    return {**summary, "database_path": str(database_path), "collection_path": str(collection_path)}
+
+
 def blank(values):
     return values.isna() | values.astype(str).str.strip().eq("")
 
@@ -244,3 +268,81 @@ def validate_visits(candidates, accepted_countries, accepted_leaders):
     add_reason(frame, frame.duplicated(business_key, keep=False), "possible_duplicate_visit")
     return split_candidates(frame)
 
+
+def create_staging_tables(connection):
+    execute_sql_file(connection, WAREHOUSE_DIRECTORY / "staging/schema.sql")
+    execute_sql_file(connection, WAREHOUSE_DIRECTORY / "quality_gate/schema.sql")
+
+
+def replace_collection_rows(connection, collection_id, countries, leaders, visits):
+    """Delete and insert all rows for one collection in the current transaction"""
+    for table in ("stg_country", "stg_leader", "stg_visit"):
+        connection.execute(f"DELETE FROM {table} WHERE collection_id = ?", [collection_id])
+    connection.execute("DELETE FROM stg_quarantine WHERE collection_id = ?", [collection_id])
+
+    insert_rows(connection, "stg_country", countries.accepted, [
+        "collection_id", "country_qid", "country_name", "iso3_code", "fips_code", "source_file", "source_record",
+    ])
+    insert_rows(connection, "stg_leader", leaders.accepted, [
+        "collection_id", "statement_uri", "leader_local_id", "leader_qid", "leader_name", "position_qid",
+        "position_title", "represented_country_iso3", "valid_from", "valid_to", "end_date_status", "source_file", "source_record",
+    ])
+    insert_rows(connection, "stg_visit", visits.accepted, [
+        "collection_id", "leader_qid", "office_statement_uri", "visitor_country_qid", "visitor_country_iso3",
+        "host_country_qid", "host_country_iso3", "start_date", "end_date", "duration_days", "is_multilateral",
+        "wiki_language", "wiki_page_id", "wiki_revision_id", "source_table_index", "source_row_index",
+        "host_country_raw", "date_raw", "areas_visited_raw", "details_raw", "source_file", "source_record",
+    ])
+    insert_quarantine_rows(connection, "stg_country", countries.rejected)
+    insert_quarantine_rows(connection, "stg_leader", leaders.rejected)
+    insert_quarantine_rows(connection, "stg_visit", visits.rejected)
+
+
+def insert_rows(connection, table, frame, columns):
+    if frame.empty:
+        return
+    relation_name = f"{table}_input"
+    connection.register(relation_name, frame[columns])
+    column_list = ", ".join(columns)
+    connection.execute(f"INSERT INTO {table} ({column_list}) SELECT {column_list} FROM {relation_name}")
+    connection.unregister(relation_name)
+
+
+def insert_quarantine_rows(connection, target_table, rejected):
+    rows = []
+    for _, rejected_row in rejected.iterrows():
+        for reason in rejected_row["rejection_reasons"]:
+            rows.append({
+                "collection_id": rejected_row["collection_id"],
+                "target_table": target_table,
+                "source_row_index": rejected_row["source_row_index"],
+                "rejection_reason": reason,
+                "source_file": rejected_row["source_file"],
+                "source_record": rejected_row["source_record"],
+            })
+    insert_rows(connection, "stg_quarantine", pd.DataFrame(rows), [
+        "collection_id", "target_table", "source_row_index", "rejection_reason", "source_file", "source_record",
+    ])
+
+
+def build_summary(collection_id, countries, leaders, visits):
+    summary = {"collection_id": collection_id, "tables": {}}
+    for table, rows in (("countries", countries), ("leaders", leaders), ("visits", visits)):
+        summary["tables"][table] = {
+            "accepted": len(rows.accepted),
+            "rejected": len(rows.rejected),
+            "rejection_reasons": sum(len(reasons) for reasons in rows.rejected["rejection_reasons"]),
+        }
+    return summary
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Load one resolved Wikidata collection into DuckDB staging")
+    parser.add_argument("--collection", required=True, help="Resolved Wikidata collection directory")
+    parser.add_argument("--database", default=DEFAULT_DATABASE, help="DuckDB database path")
+    arguments = parser.parse_args()
+    print(json.dumps(load_staging_collection(arguments.collection, arguments.database), ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
