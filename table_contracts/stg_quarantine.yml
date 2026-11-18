@@ -5,9 +5,10 @@ grain: One rejection reason per source row, target table and resolved collection
 description: >
   Rejected records are preserved alongside accepted staging data. A record with
   several problems appears once per reason; count distinct source rows to count
-  rejected records. This initial loader populates country rejections only.
+  rejected records. The staging loader records rejected countries, office
+  periods and visits.
 sources:
-  - Rejected candidates produced by staging SQL.
+  - Rejected candidates produced by warehouse/staging/loader.py.
 primary_key: [collection_id, target_table, source_row_index, rejection_reason]
 columns:
   - name: collection_id
@@ -17,7 +18,7 @@ columns:
   - name: target_table
     type: VARCHAR
     nullable: false
-    description: Intended staging table, currently stg_country.
+    description: Intended staging table: stg_country, stg_leader or stg_visit.
   - name: source_row_index
     type: BIGINT
     nullable: false
