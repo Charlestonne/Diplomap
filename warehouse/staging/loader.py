@@ -114,3 +114,72 @@ def validate_countries(candidates):
     add_reason(frame, conflicting_codes(frame, "fips_code"), "conflicting_fips_code")
     return split_candidates(frame)
 
+
+
+def date_columns(frame, start_column, end_column):
+    return pd.DataFrame({
+        start_column: pd.to_datetime(frame[start_column], errors="coerce"),
+        end_column: pd.to_datetime(frame[end_column], errors="coerce"),
+    })
+
+
+def add_date_reasons(frame, start_column, end_column):
+    dates = date_columns(frame, start_column, end_column)
+    add_reason(frame, dates[start_column].isna(), f"invalid_{start_column}")
+    add_reason(frame, frame[end_column].notna() & dates[end_column].isna(), f"invalid_{end_column}")
+    add_reason(
+        frame,
+        dates[start_column].notna() & dates[end_column].notna() & dates[end_column].lt(dates[start_column]),
+        "end_before_start",
+    )
+
+
+def invalid_end_date_status(frame):
+    return (
+        (frame["valid_to"].isna() & frame["end_date_status"].ne("not_reported_open_interval"))
+        | (frame["valid_to"].notna() & frame["end_date_status"].ne("reported"))
+    )
+
+
+def add_overlapping_office_reason(frame):
+    dates = date_columns(frame, "valid_from", "valid_to")
+    for leader_qid, leader_rows in frame.groupby("leader_qid"):
+        del leader_qid
+        ordered = leader_rows.assign(_from=dates.loc[leader_rows.index, "valid_from"], _to=dates.loc[leader_rows.index, "valid_to"])
+        ordered = ordered.sort_values("_from")
+        latest_end = None
+        for index, row in ordered.iterrows():
+            end = row["_to"]
+            if latest_end is not None and row["_from"] <= latest_end:
+                add_reason(frame, pd.Series(frame.index == index, index=frame.index), "overlapping_office_period")
+            if pd.isna(end):
+                latest_end = pd.Timestamp.max
+            elif latest_end is None or end > latest_end:
+                latest_end = end
+
+
+def validate_leaders(candidates, accepted_countries):
+    """Validate source office periods and their country reference"""
+    frame = candidates.copy()
+    # Resolution already exposes valid_from/valid_to.  Keep the fallback for a
+    # collection produced by the older normalizer, which only exposed dates.
+    if "valid_from" not in frame:
+        frame = frame.rename(columns={"start_date": "valid_from"})
+    if "valid_to" not in frame:
+        frame = frame.rename(columns={"end_date": "valid_to"})
+    add_reason(frame, blank(frame["leader_local_id"]), "missing_leader_local_id")
+    add_reason(frame, blank(frame["leader_name"]), "missing_leader_name")
+    add_reason(frame, ~matches(frame["leader_qid"], QID_PATTERN), "invalid_leader_qid")
+    add_reason(frame, ~matches(frame["position_qid"], QID_PATTERN), "invalid_position_qid")
+    add_reason(frame, ~matches(frame["statement_uri"], STATEMENT_PATTERN), "invalid_statement_uri")
+    add_reason(frame, ~matches(frame["represented_country_iso3"], ISO3_PATTERN), "invalid_represented_country_iso3")
+    add_reason(
+        frame,
+        ~frame["represented_country_iso3"].isin(accepted_countries["iso3_code"]),
+        "unknown_represented_country",
+    )
+    add_date_reasons(frame, "valid_from", "valid_to")
+    add_reason(frame, invalid_end_date_status(frame), "invalid_end_date_status")
+    add_reason(frame, duplicated_values(frame, "statement_uri"), "duplicate_statement_uri")
+    add_overlapping_office_reason(frame)
+    return split_candidates(frame)
