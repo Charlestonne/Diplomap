@@ -1,1 +1,0 @@
--- This script will transform diplomatic trip data into validated staging records.
