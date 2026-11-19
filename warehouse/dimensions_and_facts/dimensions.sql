@@ -31,7 +31,7 @@ WITH source_codes AS (
     SELECT CAMEOEVENTCODE AS cameo_code, left(CAMEOEVENTCODE, 2) AS root_code
     FROM read_csv(
         'DB/CAMEO.eventcodes.txt',
-        delim = '\\t',
+        delim = '\t',
         header = true,
         columns = {'CAMEOEVENTCODE': 'VARCHAR', 'EVENTDESCRIPTION': 'VARCHAR'}
     )
