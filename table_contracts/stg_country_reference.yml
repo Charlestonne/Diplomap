@@ -1,0 +1,40 @@
+name: stg_country_reference
+type: table
+layer: staging
+grain: One ISO3 country code in the shared ISO/CAMEO reference.
+description: >
+  Crosswalk used to enrich the collected Wikidata country rows with CAMEO
+  codes and regions. It is kept separate from stg_country because it is a
+  global reference, not a result of one Wikidata collection.
+sources:
+  - DB/ISO.country.csv
+  - DB/CAMEO.country.txt
+primary_key: [iso3_code]
+unique: [[cameo_code]]
+columns:
+  - name: iso3_code
+    type: VARCHAR
+    nullable: false
+  - name: country_name
+    type: VARCHAR
+    nullable: false
+  - name: cameo_code
+    type: VARCHAR
+    nullable: false
+  - name: region
+    type: VARCHAR
+    nullable: false
+  - name: source_cameo_file
+    type: VARCHAR
+    nullable: false
+  - name: source_iso_file
+    type: VARCHAR
+    nullable: false
+  - name: loaded_at
+    type: TIMESTAMPTZ
+    nullable: false
+business_rules:
+  - Keep only country-level CAMEO codes; aggregate regions and non-country actors are excluded.
+  - Apply the four known CAMEO-to-ISO3 aliases before joining the two sources.
+  - Require a one-to-one ISO3 join; never select an arbitrary duplicate.
+  - A missing ISO3 in stg_country remains a quarantine issue and is not inferred here.

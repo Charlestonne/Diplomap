@@ -8,6 +8,11 @@ from pathlib import Path
 import pandas as pd
 
 from warehouse.duckdb_client import DEFAULT_DATABASE, execute_sql_file, open_database
+from warehouse.staging.country_reference import (
+    DEFAULT_CAMEO_FILE,
+    DEFAULT_ISO_FILE,
+    load_country_reference,
+)
 
 
 WAREHOUSE_DIRECTORY = Path(__file__).resolve().parents[1]
@@ -70,7 +75,12 @@ def validate_collection(collection_path):
     return directory
 
 
-def load_staging_collection(collection_path, database_path=DEFAULT_DATABASE):
+def load_staging_collection(
+    collection_path,
+    database_path=DEFAULT_DATABASE,
+    cameo_file=DEFAULT_CAMEO_FILE,
+    iso_file=DEFAULT_ISO_FILE,
+):
     """Replace a collection's staging rows atomically and return load counts"""
     collection_path = validate_collection(collection_path)
     collection_id = collection_path.name
@@ -83,8 +93,10 @@ def load_staging_collection(collection_path, database_path=DEFAULT_DATABASE):
         connection.execute("BEGIN TRANSACTION")
         try:
             create_staging_tables(connection)
+            reference_summary = load_country_reference(connection, cameo_file, iso_file)
             replace_collection_rows(connection, collection_id, countries, leaders, visits)
             summary = build_summary(collection_id, countries, leaders, visits)
+            summary["country_reference"] = reference_summary
             connection.execute("COMMIT")
         except Exception:
             connection.execute("ROLLBACK")
@@ -340,8 +352,19 @@ def main():
     parser = argparse.ArgumentParser(description="Load one resolved Wikidata collection into DuckDB staging")
     parser.add_argument("--collection", required=True, help="Resolved Wikidata collection directory")
     parser.add_argument("--database", default=DEFAULT_DATABASE, help="DuckDB database path")
+    parser.add_argument("--cameo-file", default=DEFAULT_CAMEO_FILE, help="CAMEO country reference path")
+    parser.add_argument("--iso-file", default=DEFAULT_ISO_FILE, help="ISO country reference path")
     arguments = parser.parse_args()
-    print(json.dumps(load_staging_collection(arguments.collection, arguments.database), ensure_ascii=False, indent=2))
+    print(json.dumps(
+        load_staging_collection(
+            arguments.collection,
+            arguments.database,
+            arguments.cameo_file,
+            arguments.iso_file,
+        ),
+        ensure_ascii=False,
+        indent=2,
+    ))
 
 
 if __name__ == "__main__":
