@@ -24,6 +24,7 @@ def load_production(database_path=DEFAULT_DATABASE, analysis_config=DEFAULT_ANAL
             execute_sql_file(connection, SCHEMA_FILE)
             execute_sql_file(connection, DIMENSIONS_FILE)
             execute_sql_file(connection, FACTS_FILE)
+            validate_windows(connection, analysis["window_days"])
             summary = production_summary(connection)
             connection.execute("COMMIT")
         except Exception:
@@ -53,6 +54,23 @@ def set_analysis_variables(connection, analysis):
     connection.execute("SET VARIABLE analysis_start_date = ?", [analysis["start_date"]])
     connection.execute("SET VARIABLE analysis_end_date = ?", [analysis["end_date"]])
     connection.execute("SET VARIABLE analysis_window_days = ?", [analysis["window_days"]])
+
+
+def validate_windows(connection, window_days):
+    invalid_count = connection.execute(
+        """
+        SELECT count(*)
+        FROM fact_visit
+        WHERE pre_window_start <> start_date_key - ?
+           OR pre_window_end <> start_date_key - 1
+           OR post_window_start <> end_date_key + 1
+           OR post_window_end <> end_date_key + ?
+        """,
+        [window_days, window_days],
+    ).fetchone()[0]
+    if invalid_count:
+        raise ValueError(f"{invalid_count} fact_visit rows have invalid analysis windows")
+
 
 def production_summary(connection):
     table_names = (
