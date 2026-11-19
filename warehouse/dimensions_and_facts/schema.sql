@@ -35,7 +35,7 @@ CREATE TABLE dim_country (
     region        VARCHAR
 );
 
-/* Static calendar, one row per day from 2024-12-17 to 2025-07-15. */
+/* Static calendar covering the analysis period plus both configured margins. */
 CREATE TABLE dim_date (
     date_key  DATE NOT NULL PRIMARY KEY,
     year      INTEGER NOT NULL,
@@ -99,10 +99,8 @@ CREATE TABLE fact_visit (
     CHECK (start_date_key <= end_date_key),
     CHECK (visitor_country_key <> host_country_key),
     CHECK (duration_days = (end_date_key - start_date_key) + 1),
-    CHECK (pre_window_start  = start_date_key - 15),
-    CHECK (pre_window_end    = start_date_key - 1),
-    CHECK (post_window_start = end_date_key + 1),
-    CHECK (post_window_end   = end_date_key + 15)
+    CHECK (pre_window_start <= pre_window_end),
+    CHECK (post_window_start <= post_window_end)
 );
 
 /* Grain: one GDELT event between the visiting and the host country (either order). */
