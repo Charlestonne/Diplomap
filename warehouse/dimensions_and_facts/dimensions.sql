@@ -1,4 +1,3 @@
--- This script will build and load the production dimensions, including the country reference data.
 -- Load production dimensions from the current staging snapshot
 
 INSERT INTO dim_country (country_key, country_name, iso3_code, fips_code, cameo_code, region)
@@ -26,6 +25,35 @@ WITH calendar AS (
 )
 SELECT date_key, year(date_key), month(date_key), week(date_key), day(date_key)
 FROM calendar;
+
+INSERT INTO dim_event_type (event_type_key, cameo_code, root_code, quad_class, is_cooperative)
+WITH source_codes AS (
+    SELECT CAMEOEVENTCODE AS cameo_code, left(CAMEOEVENTCODE, 2) AS root_code
+    FROM read_csv(
+        'DB/CAMEO.eventcodes.txt',
+        delim = '\t',
+        header = true,
+        columns = {'CAMEOEVENTCODE': 'VARCHAR', 'EVENTDESCRIPTION': 'VARCHAR'}
+    )
+    WHERE regexp_full_match(CAMEOEVENTCODE, '[0-9]{2,4}')
+), typed_codes AS (
+    SELECT cameo_code,
+           root_code,
+           CASE
+               WHEN CAST(root_code AS INTEGER) BETWEEN 1 AND 5 THEN 1
+               WHEN CAST(root_code AS INTEGER) BETWEEN 6 AND 9 THEN 2
+               WHEN CAST(root_code AS INTEGER) BETWEEN 10 AND 14 THEN 3
+               ELSE 4
+           END AS quad_class
+    FROM source_codes
+)
+SELECT row_number() OVER (ORDER BY CAST(cameo_code AS INTEGER), cameo_code)::INTEGER,
+       cameo_code,
+       root_code,
+       quad_class,
+       quad_class IN (1, 2)
+FROM typed_codes;
+
 INSERT INTO dim_leader (
     leader_key,
     leader_id,
