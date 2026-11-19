@@ -26,3 +26,22 @@ WITH calendar AS (
 )
 SELECT date_key, year(date_key), month(date_key), week(date_key), day(date_key)
 FROM calendar;
+INSERT INTO dim_leader (
+    leader_key,
+    leader_id,
+    leader_name,
+    position_title,
+    represented_country_key,
+    valid_from,
+    valid_to
+)
+SELECT row_number() OVER (ORDER BY office.leader_qid, office.valid_from)::INTEGER,
+       office.leader_qid,
+       office.leader_name,
+       office.position_title,
+       country.country_key,
+       office.valid_from,
+       office.valid_to
+FROM stg_leader AS office
+JOIN dim_country AS country
+  ON country.iso3_code = office.represented_country_iso3;
