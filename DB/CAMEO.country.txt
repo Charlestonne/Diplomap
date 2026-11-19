@@ -225,6 +225,7 @@ ZAF	South Africa
 ESP	Spain
 LKA	Sri Lanka
 SDN	Sudan
+SSD	South Sudan
 SUR	Suriname
 SJM	Svalbard and Jan Mayen Islands
 SWZ	Swaziland
