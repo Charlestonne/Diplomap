@@ -1,4 +1,4 @@
-"""Build the GDELT staging tables and load the validated fact table."""
+"""Build staging and production tables for the warehouse"""
 
 from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG, task
@@ -15,6 +15,10 @@ with DAG(
     tags=["diplomap", "warehouse"],
 ) as dag:
     start = EmptyOperator(task_id="start")
+
+    load_stg_country = EmptyOperator(task_id="load_stg_country")
+    load_stg_leader = EmptyOperator(task_id="load_stg_leader")
+    load_stg_visit = EmptyOperator(task_id="load_stg_visit")
 
     @task(pool="duckdb_writer")
     def initialize_schema_and_dimensions() -> None:
@@ -69,9 +73,8 @@ with DAG(
 
     @task(pool="duckdb_writer")
     def run_gdelt_quality_gate() -> None:
-        from pathlib import Path
-
         import duckdb
+        from pathlib import Path
 
         from warehouse.quality_gate import quarantine
 
@@ -151,8 +154,17 @@ with DAG(
                 )
 
     finish = EmptyOperator(task_id="finish")
+
     dimensions = initialize_schema_and_dimensions()
-    staging = build_gdelt_staging()
-    quality_gate = run_gdelt_quality_gate()
-    production = load_gdelt_fact()
-    start >> dimensions >> staging >> quality_gate >> production >> finish
+    gdelt_staging = build_gdelt_staging()
+    gdelt_quality_gate = run_gdelt_quality_gate()
+    gdelt_fact = load_gdelt_fact()
+
+    # Existing GDELT path
+    start >> dimensions >> gdelt_staging
+
+    # Wikipedia and Wikidata to connect
+    start >> [load_stg_country, load_stg_leader, load_stg_visit]
+
+    [gdelt_staging, load_stg_country, load_stg_leader, load_stg_visit] >> gdelt_quality_gate
+    gdelt_quality_gate >> gdelt_fact >> finish
