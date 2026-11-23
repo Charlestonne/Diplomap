@@ -40,46 +40,6 @@ with DAG(
         )
 
     @task(pool="duckdb_writer")
-    def initialize_schema_and_dimensions() -> None:
-        from pathlib import Path
-
-        import duckdb
-
-        database = Path("/data/warehouse/diplomap.duckdb")
-        schema_sql = Path("/opt/diplomap/warehouse/dimensions_and_facts/schema.sql")
-        dimensions_sql = Path("/opt/diplomap/warehouse/dimensions_and_facts/dimensions.sql")
-        expected_tables = {
-            "dim_country",
-            "dim_date",
-            "dim_event_type",
-            "dim_visit_type",
-            "dim_leader",
-            "fact_visit",
-            "fact_gdelt_event",
-        }
-        with duckdb.connect(str(database)) as connection:
-            existing = {
-                row[0]
-                for row in connection.execute(
-                    "SELECT table_name FROM information_schema.tables "
-                    "WHERE table_schema = 'main'"
-                ).fetchall()
-            }
-            if not expected_tables.issubset(existing):
-                connection.execute(schema_sql.read_text(encoding="utf-8"))
-            connection.execute(dimensions_sql.read_text(encoding="utf-8"))
-            counts = {
-                "dim_country": connection.execute("SELECT count(*) FROM dim_country").fetchone()[0],
-                "dim_date": connection.execute("SELECT count(*) FROM dim_date").fetchone()[0],
-                "dim_event_type": connection.execute("SELECT count(*) FROM dim_event_type").fetchone()[0],
-            }
-            expected_counts = {"dim_country": 233, "dim_date": 211, "dim_event_type": 310}
-            if counts != expected_counts:
-                raise RuntimeError(
-                    f"Unexpected dimension counts: got {counts}, expected {expected_counts}"
-                )
-
-    @task(pool="duckdb_writer")
     def build_gdelt_staging() -> None:
         from pathlib import Path
 
@@ -180,7 +140,6 @@ with DAG(
 
     finish = EmptyOperator(task_id="finish")
 
-    dimensions = initialize_schema_and_dimensions()
     staging_collection = load_staging_collection_task()
     gdelt_staging = build_gdelt_staging()
     gdelt_quality_gate = run_gdelt_quality_gate()
@@ -188,6 +147,6 @@ with DAG(
     gdelt_fact = load_gdelt_fact()
 
     # Existing GDELT path
-    start >> staging_collection >> dimensions >> gdelt_staging
+    start >> staging_collection >> gdelt_staging
     gdelt_staging >> gdelt_quality_gate
     gdelt_quality_gate >> production >> gdelt_fact >> finish
