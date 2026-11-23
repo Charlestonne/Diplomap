@@ -51,6 +51,7 @@ def load_raw_page(directory):
     return {
         "text": (directory / "page.html").read_text(encoding="utf-8"),
         "leader_local_id": metadata.get("leader_id"),
+        "page_title": metadata.get("page_title"),
         "pageid": metadata["page_id"],
         "revid": metadata["revision_id"],
         "language": metadata["language"],
