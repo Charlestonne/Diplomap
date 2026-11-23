@@ -4,13 +4,13 @@ from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG, task
 from pendulum import datetime
 
-from assets import gdelt_landing
+from assets import gdelt_landing, wikidata_landing
 
 
 with DAG(
     dag_id="diplomap_build_warehouse",
     start_date=datetime(2024, 12, 17, tz="UTC"),
-    schedule=gdelt_landing,
+    schedule=[gdelt_landing, wikidata_landing],
     catchup=False,
     tags=["diplomap", "warehouse"],
 ) as dag:
