@@ -30,7 +30,7 @@ with DAG(
             for path in resolved_root.iterdir()
             if path.is_dir() and (path / "manifest.json").is_file()
         )
-    
+
         if not collections:
             raise RuntimeError(f"No resolved Wikidata collection found in {resolved_root}")
 
@@ -103,6 +103,12 @@ with DAG(
         missing = [result["rule_id"] for result in results if result["status"] == "table_missing"]
         if missing:
             raise RuntimeError(f"GDELT quality gate could not find required tables: {missing}")
+
+    @task(pool="duckdb_writer")
+    def load_production_warehouse() -> dict:
+        from warehouse.production_loader import load_production
+
+        return load_production(database_path="/data/warehouse/diplomap.duckdb")
 
     @task(pool="duckdb_writer")
     def load_gdelt_fact() -> None:
@@ -178,9 +184,10 @@ with DAG(
     staging_collection = load_staging_collection_task()
     gdelt_staging = build_gdelt_staging()
     gdelt_quality_gate = run_gdelt_quality_gate()
+    production = load_production_warehouse()
     gdelt_fact = load_gdelt_fact()
 
     # Existing GDELT path
     start >> staging_collection >> dimensions >> gdelt_staging
     gdelt_staging >> gdelt_quality_gate
-    gdelt_quality_gate >> gdelt_fact >> finish
+    gdelt_quality_gate >> production >> gdelt_fact >> finish
