@@ -71,6 +71,41 @@ with DAG(
         return load_production(database_path="/data/warehouse/diplomap.duckdb")
 
     @task(pool="duckdb_writer")
+    def validate_production_warehouse() -> dict:
+        from pathlib import Path
+
+        from warehouse.duckdb_client import open_database
+        from warehouse.production_loader import production_summary
+
+        database = Path("/data/warehouse/diplomap.duckdb")
+        required_tables = {
+            "dim_country",
+            "dim_date",
+            "dim_event_type",
+            "dim_visit_type",
+            "dim_leader",
+            "fact_visit",
+            "fact_gdelt_event",
+        }
+        with open_database(database) as connection:
+            existing_tables = {
+                row[0]
+                for row in connection.execute(
+                    "SELECT table_name FROM information_schema.tables "
+                    "WHERE table_schema = 'main'"
+                ).fetchall()
+            }
+            missing_tables = sorted(required_tables - existing_tables)
+            if missing_tables:
+                raise RuntimeError(f"Production tables are missing: {missing_tables}")
+
+            summary = production_summary(connection)
+            if any(count < 0 for count in summary.values()):
+                raise RuntimeError(f"Invalid production row counts: {summary}")
+
+        return summary
+
+    @task(pool="duckdb_writer")
     def load_gdelt_fact() -> None:
         from pathlib import Path
 
@@ -145,8 +180,9 @@ with DAG(
     gdelt_quality_gate = run_gdelt_quality_gate()
     production = load_production_warehouse()
     gdelt_fact = load_gdelt_fact()
+    production_validation = validate_production_warehouse()
 
     # Existing GDELT path
     start >> staging_collection >> gdelt_staging
     gdelt_staging >> gdelt_quality_gate
-    gdelt_quality_gate >> production >> gdelt_fact >> finish
+    gdelt_quality_gate >> production >> gdelt_fact >> production_validation >> finish
