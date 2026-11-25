@@ -1,4 +1,6 @@
--- Idempotent production dimension load.
+-- Initial production dimension load.
+-- Do not rerun against a populated fact warehouse: DuckDB may reject updates to
+-- dimension rows referenced by foreign keys. Use a controlled migration instead.
 -- The source files are mounted at /opt/diplomap/DB in the Airflow image.
 
 CREATE OR REPLACE TEMP TABLE dim_country_source AS

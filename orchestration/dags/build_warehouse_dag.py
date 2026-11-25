@@ -42,9 +42,16 @@ with DAG(
                     "WHERE table_schema = 'main'"
                 ).fetchall()
             }
-            if not expected_tables.issubset(existing):
+            missing = sorted(expected_tables - existing)
+            if existing and missing:
+                raise RuntimeError(
+                    "The warehouse schema is incomplete and contains existing tables; "
+                    f"refusing to rebuild it because foreign keys may be referenced. Missing: {missing}"
+                )
+            if not existing:
                 connection.execute(schema_sql.read_text(encoding="utf-8"))
-            connection.execute(dimensions_sql.read_text(encoding="utf-8"))
+                connection.execute(dimensions_sql.read_text(encoding="utf-8"))
+
             counts = {
                 "dim_country": connection.execute("SELECT count(*) FROM dim_country").fetchone()[0],
                 "dim_date": connection.execute("SELECT count(*) FROM dim_date").fetchone()[0],
@@ -53,7 +60,10 @@ with DAG(
             expected_counts = {"dim_country": 233, "dim_date": 211, "dim_event_type": 310}
             if counts != expected_counts:
                 raise RuntimeError(
-                    f"Unexpected dimension counts: got {counts}, expected {expected_counts}"
+                    "Warehouse dimensions are already initialized but their row counts "
+                    f"are unexpected: got {counts}, expected {expected_counts}. "
+                    "Refusing to rerun dimensions.sql against a populated warehouse; "
+                    "use a controlled migration or reset the database first."
                 )
 
     @task(pool="duckdb_writer")
