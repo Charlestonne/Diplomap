@@ -11,6 +11,7 @@ from .qid_cache import DEFAULT_QID_CACHE
 def main():
     parser = argparse.ArgumentParser(description="Wikipedia leaders trip ingestion")
     parser.add_argument("--collect", action="store_true", help="Save raw inventory pages without parsing")
+    parser.add_argument("--refresh", action="store_true", help="Redownload pages even when a complete capture exists")
     parser.add_argument("--inventory", default=DEFAULT_INVENTORY)
     parser.add_argument("--output", default=DEFAULT_OUTPUT)
 
@@ -34,7 +35,7 @@ def main():
     if args.normalize and (not args.saved_page or args.collect):
         parser.error("--normalize requires --saved-page and cannot be combined with --collect")
     if args.collect:
-        for path in collect_pages(args.inventory, args.output):
+        for path in collect_pages(args.inventory, args.output, refresh=args.refresh):
             print(path)
         return
 

@@ -1,7 +1,7 @@
 from datetime import date
 from pathlib import Path
 
-from .storage import save_raw_page, load_raw_page, DEFAULT_OUTPUT
+from .storage import find_saved_page, save_raw_page, load_raw_page, DEFAULT_OUTPUT
 from .inventory import load_inventory, find_leader, DEFAULT_INVENTORY
 from .scraper import fetch_wikipedia_page
 from .parser import get_year_tables, parse_table
@@ -57,10 +57,16 @@ def extract_page_visits(page, leader, year):
     return visits
 
 # Save the raw source pages before any parsing.
-def collect_pages(inventory=DEFAULT_INVENTORY, output=DEFAULT_OUTPUT):
+def collect_pages(inventory=DEFAULT_INVENTORY, output=DEFAULT_OUTPUT, refresh=False):
+    """Collect inventory pages once; optionally refresh existing captures."""
     paths = []
     for leader in load_inventory(inventory):
         for source in leader["trips_pages"]:
+            if not refresh:
+                existing_path = find_saved_page(leader["leader_id"], source, output)
+                if existing_path is not None:
+                    paths.append(existing_path)
+                    continue
             page = fetch_wikipedia_page(source["title"], language=source["language"])
             path = save_raw_page(leader["leader_id"], source, page, output)
             paths.append(path)

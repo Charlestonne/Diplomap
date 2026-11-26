@@ -44,6 +44,31 @@ def save_raw_page(leader_id, source, page, output=DEFAULT_OUTPUT):
     return destination
 
 
+def find_saved_page(leader_id, source, output=DEFAULT_OUTPUT):
+    """Return the newest complete capture for an inventory page if present"""
+    root = Path(output) / leader_id / source["language"]
+    if not root.is_dir():
+        return None
+
+    candidates = []
+    for metadata_path in root.glob("**/metadata.json"):
+        html_path = metadata_path.with_name("page.html")
+        if not html_path.is_file():
+            continue
+        try:
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if (metadata.get("leader_id") == leader_id and metadata.get("language") == source["language"]
+            and metadata.get("page_title") == source["title"]):
+            
+            candidates.append((metadata.get("revision_id", 0), metadata_path.parent))
+
+    if not candidates:
+        return None
+    return max(candidates, key=lambda candidate: candidate[0])[1]
+
+
 def load_raw_page(directory):
     """Read a saved capture and its metadata"""
     directory = Path(directory)
