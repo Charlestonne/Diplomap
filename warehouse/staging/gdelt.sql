@@ -16,9 +16,11 @@ kept AS (
       AND Actor2CountryCode IS NOT NULL
       AND Actor1CountryCode <> Actor2CountryCode
       AND Actor1CountryCode NOT IN ('WSB', 'BAG', 'GZS', 'AFR', 'ASA', 'BLK', 'CRB', 'CAU', 'CFR', 'CAS', 'CEU', 'EIN', 'EAF', 'EEU',
-                                    'EUR', 'LAM', 'MEA', 'MDT', 'NAF', 'NMR', 'PGS', 'SCN', 'SAM', 'SAS', 'SEA', 'SAF', 'WAF', 'WST')
+                                    'EUR', 'LAM', 'MEA', 'MDT', 'NAF', 'NMR', 'PGS', 'SCN', 'SAM', 'SAS', 'SEA', 'SAF', 'WAF', 'WST',
+                                    'ANT', 'ALA', 'GUF', 'GLP', 'MTQ', 'NFK')
       AND Actor2CountryCode NOT IN ('WSB', 'BAG', 'GZS', 'AFR', 'ASA', 'BLK', 'CRB', 'CAU', 'CFR', 'CAS', 'CEU', 'EIN', 'EAF', 'EEU',
-                                    'EUR', 'LAM', 'MEA', 'MDT', 'NAF', 'NMR', 'PGS', 'SCN', 'SAM', 'SAS', 'SEA', 'SAF', 'WAF', 'WST')
+                                    'EUR', 'LAM', 'MEA', 'MDT', 'NAF', 'NMR', 'PGS', 'SCN', 'SAM', 'SAS', 'SEA', 'SAF', 'WAF', 'WST',
+                                    'ANT', 'ALA', 'GUF', 'GLP', 'MTQ', 'NFK')
       -- R2: reference date = Day; inside the study period (visit windows, ±15 days around Jan-Jun 2025);
       --     reported at most 30 days after it happened.
       AND event_date BETWEEN DATE '2024-12-17' AND DATE '2025-07-15'
