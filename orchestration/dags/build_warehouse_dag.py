@@ -1,7 +1,7 @@
 """Build the GDELT staging tables and load the validated fact table."""
 
 from airflow.providers.standard.operators.empty import EmptyOperator
-from airflow.sdk import DAG, task
+from airflow.sdk import DAG, Param, task
 from pendulum import datetime
 
 from assets import gdelt_landing
@@ -13,27 +13,49 @@ with DAG(
     schedule=gdelt_landing,
     catchup=False,
     tags=["diplomap", "warehouse"],
+    params={
+        "full_rebuild": Param(
+            False,
+            type="boolean",
+            description="Drop ALL warehouse tables and rebuild them from schema.sql + dimensions.sql.",
+        ),
+        "confirm_data_loss": Param(
+            False,
+            type="boolean",
+            description="Required if fact_visit or dim_leader contain rows (they are dropped, not rebuilt here).",
+        ),
+    },
 ) as dag:
     start = EmptyOperator(task_id="start")
 
     @task(pool="duckdb_writer")
     def initialize_schema_and_dimensions() -> None:
+        import logging
         from pathlib import Path
 
         import duckdb
+        from airflow.sdk import get_current_context
+        from pendulum import now
+
+        log = logging.getLogger(__name__)
+        params = get_current_context()["params"]
+        full_rebuild = bool(params.get("full_rebuild"))
+        confirm_data_loss = bool(params.get("confirm_data_loss"))
 
         database = Path("/data/warehouse/diplomap.duckdb")
         schema_sql = Path("/opt/diplomap/warehouse/dimensions_and_facts/schema.sql")
         dimensions_sql = Path("/opt/diplomap/warehouse/dimensions_and_facts/dimensions.sql")
         expected_tables = {
-            "dim_country",
-            "dim_date",
-            "dim_event_type",
-            "dim_visit_type",
-            "dim_leader",
-            "fact_visit",
-            "fact_gdelt_event",
+            "dim_country", "dim_date", "dim_event_type", "dim_visit_type",
+            "dim_leader", "fact_visit", "fact_gdelt_event",
         }
+        # Children first, parents last (same order as schema.sql).
+        drop_order = [
+            "fact_gdelt_event", "fact_visit", "dim_leader", "dim_event_type",
+            "dim_visit_type", "dim_date", "dim_country",
+        ]
+        not_rebuilt_here = ("fact_visit", "dim_leader", "dim_visit_type")
+
         with duckdb.connect(str(database)) as connection:
             existing = {
                 row[0]
@@ -42,28 +64,60 @@ with DAG(
                     "WHERE table_schema = 'main'"
                 ).fetchall()
             }
-            missing = sorted(expected_tables - existing)
-            if existing and missing:
-                raise RuntimeError(
-                    "The warehouse schema is incomplete and contains existing tables; "
-                    f"refusing to rebuild it because foreign keys may be referenced. Missing: {missing}"
-                )
+
+            if full_rebuild:
+                at_risk = {
+                    table: connection.execute(f"SELECT count(*) FROM {table}").fetchone()[0]
+                    for table in not_rebuilt_here
+                    if table in existing
+                }
+                at_risk = {table: n for table, n in at_risk.items() if n}
+                if at_risk and not confirm_data_loss:
+                    raise RuntimeError(
+                        f"Full rebuild would destroy data not rebuilt by this DAG: {at_risk}. "
+                        "Set confirm_data_loss=true to proceed."
+                    )
+
+                backup_dir = database.parent / "backups" / f"diplomap_{now('UTC').format('YYYYMMDD_HHmmss')}"
+                backup_dir.mkdir(parents=True, exist_ok=True)
+                connection.execute(f"EXPORT DATABASE '{backup_dir}' (FORMAT PARQUET)")
+                log.warning("Full rebuild: backup written to %s", backup_dir)
+
+                for table in drop_order:  # one statement per DROP: no shared transaction
+                    connection.execute(f"DROP TABLE IF EXISTS {table}")
+                existing = set()
+            else:
+                missing = sorted(expected_tables - existing)
+                if existing and missing:
+                    raise RuntimeError(
+                        "The warehouse schema is incomplete and contains existing tables; "
+                        f"run with full_rebuild=true to recreate it. Missing: {missing}"
+                    )
+
             if not existing:
                 connection.execute(schema_sql.read_text(encoding="utf-8"))
-                connection.execute(dimensions_sql.read_text(encoding="utf-8"))
-
-            counts = {
-                "dim_country": connection.execute("SELECT count(*) FROM dim_country").fetchone()[0],
-                "dim_date": connection.execute("SELECT count(*) FROM dim_date").fetchone()[0],
-                "dim_event_type": connection.execute("SELECT count(*) FROM dim_event_type").fetchone()[0],
-            }
-            expected_counts = {"dim_country": 233, "dim_date": 211, "dim_event_type": 310}
-            if counts != expected_counts:
+            connection.execute(dimensions_sql.read_text(encoding="utf-8"))
+          
+            duplicates = connection.execute(
+                "SELECT count(*) FROM (SELECT cameo_code FROM dim_country "
+                "GROUP BY 1 HAVING count(*) > 1)"
+            ).fetchone()[0]
+            if duplicates:
                 raise RuntimeError(
-                    "Warehouse dimensions are already initialized but their row counts "
-                    f"are unexpected: got {counts}, expected {expected_counts}. "
-                    "Refusing to rerun dimensions.sql against a populated warehouse; "
-                    "use a controlled migration or reset the database first."
+                    f"dim_country inconsistent: {duplicates} duplicates"
+                )
+
+            drift = connection.execute(
+                "SELECT count(*) FROM dim_country_source s "
+                "JOIN dim_country t USING (cameo_code) "
+                "WHERE t.iso3_code IS DISTINCT FROM s.iso3_code "
+                "OR t.fips_code IS DISTINCT FROM s.fips_code"
+            ).fetchone()[0]
+            if drift:
+                log.warning(
+                    "%s countries have an iso3/fips code that differs from the source; "
+                    "these indexed columns are not updated. Rerun with full_rebuild=true.",
+                    drift,
                 )
 
     @task(pool="duckdb_writer")
