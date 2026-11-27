@@ -11,6 +11,7 @@ Hand-made set: Q1 (France) visits Japan twice and Germany once, Q2 (Japan) visit
 Japan, Q4 (Italy) never travels.
 """
 
+import json
 import os
 import sys
 from datetime import date
@@ -137,11 +138,14 @@ def test_network_queries_match_the_hand_computation(driver):
         ("Q3", "VISITED", "JPN", 1, 2),
     ]
 
-    shared = [(r["leader_a_id"], r["leader_b_id"], r["n_shared"], r["shared_countries"])
-              for r in query(driver, "shared_destinations")]
-    assert shared == [("Q1", "Q3", 1, ["JPN"])]
+    shared = query(driver, "shared_destinations")
+    assert [tuple(r.values()) for r in shared] == [("Q1", "Q3", 1, ["JPN"])]
 
-    reciprocal = [(r["country_a"], r["country_b"], r["leaders_a_to_b"], r["leaders_b_to_a"],
-                   str(r["first_a_to_b"]), str(r["first_b_to_a"]))
+    reciprocal = [{**r, "first_a_to_b": str(r["first_a_to_b"]), "first_b_to_a": str(r["first_b_to_a"])}
                   for r in query(driver, "reciprocal_visits")]
-    assert reciprocal == [("FRA", "JPN", ["Leader A"], ["Leader B"], "2025-02-10", "2025-05-20")]
+    assert [tuple(r.values()) for r in reciprocal] == [("FRA", "JPN", ["Q1"], ["Q2"], "2025-02-10", "2025-05-20")]
+
+    # The API returns these rows as they are: same fields, same order as its schemas (P1-12).
+    api_schemas = json.loads((ROOT / "backend" / "openapi.json").read_text())["components"]["schemas"]
+    assert list(shared[0]) == list(api_schemas["SharedDestination"]["properties"])
+    assert list(reciprocal[0]) == list(api_schemas["ReciprocalVisit"]["properties"])

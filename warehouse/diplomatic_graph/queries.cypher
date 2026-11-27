@@ -1,6 +1,8 @@
 // Read queries of the Network view (P4-05), for the network route of the API (P1).
 // The graph is built by sync.py; its model is described there. Each query starts with a "// name:" line;
 // sync.network_queries() returns them by name. Dates are Neo4j dates; the API serialises them as ISO strings.
+// shared_destinations and reciprocal_visits return exactly the fields of the API schemas SharedDestination and
+// ReciprocalVisit (backend/openapi.json): leader ids, not names; the API resolves names through the nodes.
 
 // name: leader_country_graph
 // Edges of the leader-country graph: VISITED (with the number of visits) and REPRESENTS,
@@ -18,7 +20,7 @@ ORDER BY leader_id, relation, iso3
 MATCH (a:Leader)-[:VISITED]->(c:Country)<-[:VISITED]-(b:Leader)
 WHERE a.leader_id < b.leader_id
 WITH a, b, c ORDER BY c.iso3
-RETURN a.leader_id AS leader_a_id, a.name AS leader_a, b.leader_id AS leader_b_id, b.name AS leader_b,
+RETURN a.leader_id AS leader_a_id, b.leader_id AS leader_b_id,
        count(c) AS n_shared, collect(c.iso3) AS shared_countries
 ORDER BY n_shared DESC, leader_a_id, leader_b_id
 
@@ -31,6 +33,6 @@ MATCH (la:Leader)-[:REPRESENTS]->(a:Country), (la)-[x:VISITED]->(b:Country),
 WHERE a.iso3 < b.iso3
 WITH a, b, la, lb, x, y ORDER BY la.leader_id, lb.leader_id
 RETURN a.iso3 AS country_a, b.iso3 AS country_b,
-       collect(DISTINCT la.name) AS leaders_a_to_b, collect(DISTINCT lb.name) AS leaders_b_to_a,
+       collect(DISTINCT la.leader_id) AS leaders_a_to_b, collect(DISTINCT lb.leader_id) AS leaders_b_to_a,
        min(x.first_visit) AS first_a_to_b, min(y.first_visit) AS first_b_to_a
 ORDER BY country_a, country_b

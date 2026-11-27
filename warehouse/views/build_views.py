@@ -12,7 +12,7 @@ from pathlib import Path
 import duckdb
 
 HERE = Path(__file__).resolve().parent
-VIEWS = ["v_visit_event", "v_kpi_visit"]   # dependency order
+VIEWS = ["v_visit", "v_visit_event", "v_kpi_visit"]   # dependency order
 
 
 def build_views(connection: duckdb.DuckDBPyConnection) -> None:
