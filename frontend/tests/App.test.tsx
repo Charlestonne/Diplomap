@@ -13,8 +13,7 @@ afterEach(() => {
 test("shows the network from the mocks", async () => {
   render(<App />);
   fireEvent.click(screen.getByRole("button", { name: "Network" }));
-  expect(await screen.findByText("Leader A and Leader C: JPN")).toBeTruthy();
-  expect(screen.getByText("FRA ↔ JPN")).toBeTruthy();
+  expect(await screen.findByRole("heading", { name: "International visits and representation network" })).toBeTruthy();
 });
 
 test("an unknown visit answers 404 like the API", async () => {

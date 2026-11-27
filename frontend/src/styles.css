@@ -77,19 +77,19 @@ h2, h3 { margin: 0 0 8px; }
 main { padding: 20px 24px; }
 
 /* Globe view: filters | globe | visit, then the related events across */
-.globe-view {
+.globe-view, .network-view {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr) 440px;
   gap: 20px;
   align-items: start;
 }
-.related { grid-column: 1 / -1; }
+.related, .wide { grid-column: 1 / -1; }
 @media (max-width: 1100px) {
-  .globe-view { grid-template-columns: 300px minmax(0, 1fr); }
+  .globe-view, .network-view { grid-template-columns: 300px minmax(0, 1fr); }
   .visit { grid-column: 1 / -1; }
 }
 @media (max-width: 700px) {
-  .globe-view { grid-template-columns: minmax(0, 1fr); }
+  .globe-view, .network-view { grid-template-columns: minmax(0, 1fr); }
   .topbar { grid-template-columns: 1fr; padding: 8px 16px 0; gap: 0; }
   .topbar h1 small, .scope { display: none; }
   main { padding: 16px; }
@@ -199,6 +199,46 @@ main { padding: 20px 24px; }
 .chart .grid { stroke: var(--grid); }
 .chart .axis { stroke: var(--muted); }
 .chart .tick { fill: var(--muted); font-size: 11px; }
+
+/* Network view */
+:root { --leader: #14a38b; }
+.network-view { grid-template-columns: 300px minmax(0, 1fr) 360px; }
+.small { margin: 0 0 8px; font-size: 13px; }
+.net-legend { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 6px; font-size: 13px; }
+.net-legend li { display: flex; align-items: center; gap: 8px; }
+.net-legend svg { width: 40px; height: 10px; overflow: visible; }
+.key { display: inline-block; flex: none; width: 14px; height: 14px; border-radius: 50%; }
+.key.leader { background: var(--leader); }
+.key.country { background: var(--primary); }
+.sizes { width: 100%; max-width: 240px; margin-bottom: 12px; }
+.sizes circle { fill: none; stroke: var(--muted); }
+.sizes text { fill: var(--muted); font-size: 11px; }
+.graph h2 { font-size: 18px; margin: 0; }
+.graph > p { margin: 2px 0 12px; }
+.network { display: block; width: 100%; min-width: 520px; }
+.edge { fill: none; stroke: var(--muted); stroke-opacity: 0.45; stroke-width: 1.5; }
+.edge.represents { stroke-dasharray: 5 4; stroke-width: 1.2; }
+.edge.active { stroke: var(--primary); stroke-opacity: 1; }
+.edge.represents.active { stroke: var(--leader); }
+marker.arrow path { fill: var(--muted); fill-opacity: 0.6; }
+marker.arrow-active path { fill: var(--primary); }
+.node { cursor: pointer; outline: none; }
+.node text { fill: var(--text); font-size: 14px; font-weight: 600; }
+.node.leader circle { fill: var(--leader); }
+.node.country circle { fill: var(--primary-soft); stroke: var(--primary); stroke-width: 1.5; }
+.node .person { fill: none; stroke: #fff; stroke-width: 2; }
+.node.selected circle, .node:focus-visible circle { stroke: #ffd24a; stroke-width: 3.5; }
+.net-leaders { list-style: none; padding: 0; margin: 0 0 16px; }
+.net-leaders li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.net-leaders b, .net-leaders small { display: block; }
+.net-leaders small { color: var(--muted); font-size: 12px; }
+.badge { margin-left: auto; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge.visited { background: var(--primary-soft); color: var(--primary); }
+.badge.represents { background: var(--up-bg); color: var(--up); }
+.about { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 13px; }
+.about dt { color: var(--muted); }
+.about dd { margin: 0; text-align: right; font-weight: 500; }
+.wide h2 { font-size: 17px; }
 
 /* Phone: after the base rules above, so that it overrides them */
 @media (max-width: 700px) {

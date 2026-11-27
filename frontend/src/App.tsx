@@ -1,45 +1,8 @@
-// DiploMap: the Globe view (P4-08) and, until P4-09 replaces it, a plain list of the network.
+// DiploMap: the Globe view (P4-08) and the Network view (P4-09).
 import { useState } from "react";
-import { api, MOCK, useApi } from "./api";
+import { MOCK } from "./api";
 import GlobeView from "./GlobeView";
-
-function NetworkLists() {
-  const { data, error } = useApi(api.network, "network");
-  if (error) return <p role="alert">{error}</p>;
-  if (!data) return <p>Loading…</p>;
-  const label = new Map(data.nodes.map((n) => [n.id, n.label]));
-  return (
-    <>
-      <h2>Leader–country graph</h2>
-      <ul>
-        {data.edges.map((e) => (
-          <li key={`${e.source}-${e.type}-${e.target}`}>
-            {label.get(e.source)}{" "}
-            {e.type === "VISITED"
-              ? `visited ${label.get(e.target)} (${e.n_visits}×)`
-              : `represents ${label.get(e.target)}`}
-          </li>
-        ))}
-      </ul>
-      <h2>Shared destinations</h2>
-      <ul>
-        {data.shared_destinations.map((s) => (
-          <li key={`${s.leader_a_id}-${s.leader_b_id}`}>
-            {label.get(s.leader_a_id)} and {label.get(s.leader_b_id)}: {s.shared_countries.join(", ")}
-          </li>
-        ))}
-      </ul>
-      <h2>Reciprocal visits</h2>
-      <ul>
-        {data.reciprocal_visits.map((r) => (
-          <li key={`${r.country_a}-${r.country_b}`}>
-            {r.country_a} ↔ {r.country_b}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
-}
+import NetworkView from "./NetworkView";
 
 const GlobeIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -82,7 +45,7 @@ export default function App() {
           )}
         </p>
       </header>
-      <main>{tab === "globe" ? <GlobeView /> : <NetworkLists />}</main>
+      <main>{tab === "globe" ? <GlobeView /> : <NetworkView />}</main>
     </>
   );
 }
