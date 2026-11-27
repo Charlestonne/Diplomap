@@ -1,0 +1,141 @@
+{
+  "nodes": [
+    {
+      "id": "Q1",
+      "type": "leader",
+      "label": "Leader A",
+      "iso3_code": null
+    },
+    {
+      "id": "Q2",
+      "type": "leader",
+      "label": "Leader B",
+      "iso3_code": null
+    },
+    {
+      "id": "Q3",
+      "type": "leader",
+      "label": "Leader C",
+      "iso3_code": null
+    },
+    {
+      "id": "BRA",
+      "type": "country",
+      "label": "Brazil",
+      "iso3_code": "BRA"
+    },
+    {
+      "id": "DEU",
+      "type": "country",
+      "label": "Germany",
+      "iso3_code": "DEU"
+    },
+    {
+      "id": "FRA",
+      "type": "country",
+      "label": "France",
+      "iso3_code": "FRA"
+    },
+    {
+      "id": "IND",
+      "type": "country",
+      "label": "India",
+      "iso3_code": "IND"
+    },
+    {
+      "id": "JPN",
+      "type": "country",
+      "label": "Japan",
+      "iso3_code": "JPN"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Q1",
+      "target": "FRA",
+      "type": "REPRESENTS",
+      "n_visits": null,
+      "first_visit": null
+    },
+    {
+      "source": "Q1",
+      "target": "DEU",
+      "type": "VISITED",
+      "n_visits": 1,
+      "first_visit": "2025-06-02"
+    },
+    {
+      "source": "Q1",
+      "target": "IND",
+      "type": "VISITED",
+      "n_visits": 1,
+      "first_visit": "2025-02-10"
+    },
+    {
+      "source": "Q1",
+      "target": "JPN",
+      "type": "VISITED",
+      "n_visits": 1,
+      "first_visit": "2025-03-10"
+    },
+    {
+      "source": "Q2",
+      "target": "JPN",
+      "type": "REPRESENTS",
+      "n_visits": null,
+      "first_visit": null
+    },
+    {
+      "source": "Q2",
+      "target": "FRA",
+      "type": "VISITED",
+      "n_visits": 1,
+      "first_visit": "2025-03-20"
+    },
+    {
+      "source": "Q3",
+      "target": "DEU",
+      "type": "REPRESENTS",
+      "n_visits": null,
+      "first_visit": null
+    },
+    {
+      "source": "Q3",
+      "target": "BRA",
+      "type": "VISITED",
+      "n_visits": 1,
+      "first_visit": "2025-05-05"
+    },
+    {
+      "source": "Q3",
+      "target": "JPN",
+      "type": "VISITED",
+      "n_visits": 1,
+      "first_visit": "2025-04-14"
+    }
+  ],
+  "shared_destinations": [
+    {
+      "leader_a_id": "Q1",
+      "leader_b_id": "Q3",
+      "n_shared": 1,
+      "shared_countries": [
+        "JPN"
+      ]
+    }
+  ],
+  "reciprocal_visits": [
+    {
+      "country_a": "FRA",
+      "country_b": "JPN",
+      "leaders_a_to_b": [
+        "Q1"
+      ],
+      "leaders_b_to_a": [
+        "Q2"
+      ],
+      "first_a_to_b": "2025-03-10",
+      "first_b_to_a": "2025-03-20"
+    }
+  ]
+}

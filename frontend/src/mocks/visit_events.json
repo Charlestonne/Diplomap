@@ -1,0 +1,2848 @@
+{
+  "2": [
+    {
+      "visit_key": 2,
+      "gdelt_event_id": 1200000052,
+      "visit_window": "PRE",
+      "day_offset": -12,
+      "event_date_key": "2025-01-29",
+      "actor1_country": {
+        "iso3_code": "IND",
+        "country_name": "India"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.8,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000052"
+    },
+    {
+      "visit_key": 2,
+      "gdelt_event_id": 1200000053,
+      "visit_window": "PRE",
+      "day_offset": -8,
+      "event_date_key": "2025-02-02",
+      "actor1_country": {
+        "iso3_code": "IND",
+        "country_name": "India"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000053"
+    },
+    {
+      "visit_key": 2,
+      "gdelt_event_id": 1200000054,
+      "visit_window": "PRE",
+      "day_offset": -4,
+      "event_date_key": "2025-02-06",
+      "actor1_country": {
+        "iso3_code": "IND",
+        "country_name": "India"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -4.2,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000054"
+    },
+    {
+      "visit_key": 2,
+      "gdelt_event_id": 1200000056,
+      "visit_window": "POST",
+      "day_offset": 3,
+      "event_date_key": "2025-02-14",
+      "actor1_country": {
+        "iso3_code": "IND",
+        "country_name": "India"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.2,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000056"
+    },
+    {
+      "visit_key": 2,
+      "gdelt_event_id": 1200000057,
+      "visit_window": "POST",
+      "day_offset": 7,
+      "event_date_key": "2025-02-18",
+      "actor1_country": {
+        "iso3_code": "IND",
+        "country_name": "India"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.1,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000057"
+    },
+    {
+      "visit_key": 2,
+      "gdelt_event_id": 1200000058,
+      "visit_window": "POST",
+      "day_offset": 11,
+      "event_date_key": "2025-02-22",
+      "actor1_country": {
+        "iso3_code": "IND",
+        "country_name": "India"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000058"
+    }
+  ],
+  "1": [
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000004,
+      "visit_window": "PRE",
+      "day_offset": -15,
+      "event_date_key": "2025-02-23",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000004"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000005,
+      "visit_window": "PRE",
+      "day_offset": -14,
+      "event_date_key": "2025-02-24",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000005"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000006,
+      "visit_window": "PRE",
+      "day_offset": -13,
+      "event_date_key": "2025-02-25",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000006"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000007,
+      "visit_window": "PRE",
+      "day_offset": -13,
+      "event_date_key": "2025-02-25",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.5,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000007"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000008,
+      "visit_window": "PRE",
+      "day_offset": -11,
+      "event_date_key": "2025-02-27",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.5,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000008"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000009,
+      "visit_window": "PRE",
+      "day_offset": -10,
+      "event_date_key": "2025-02-28",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.6,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000009"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000010,
+      "visit_window": "PRE",
+      "day_offset": -9,
+      "event_date_key": "2025-03-01",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -4.2,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000010"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000011,
+      "visit_window": "PRE",
+      "day_offset": -9,
+      "event_date_key": "2025-03-01",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.4,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000011"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000012,
+      "visit_window": "PRE",
+      "day_offset": -7,
+      "event_date_key": "2025-03-03",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.9,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000012"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000013,
+      "visit_window": "PRE",
+      "day_offset": -6,
+      "event_date_key": "2025-03-04",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000013"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000014,
+      "visit_window": "PRE",
+      "day_offset": -5,
+      "event_date_key": "2025-03-05",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.1,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000014"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000015,
+      "visit_window": "PRE",
+      "day_offset": -5,
+      "event_date_key": "2025-03-05",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000015"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000016,
+      "visit_window": "PRE",
+      "day_offset": -3,
+      "event_date_key": "2025-03-07",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.4,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000016"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000017,
+      "visit_window": "PRE",
+      "day_offset": -2,
+      "event_date_key": "2025-03-08",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -5.4,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000017"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000018,
+      "visit_window": "PRE",
+      "day_offset": -1,
+      "event_date_key": "2025-03-09",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.8,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000018"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000019,
+      "visit_window": "PRE",
+      "day_offset": -1,
+      "event_date_key": "2025-03-09",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000019"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000022,
+      "visit_window": "POST",
+      "day_offset": 1,
+      "event_date_key": "2025-03-13",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.1,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000022"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000023,
+      "visit_window": "POST",
+      "day_offset": 1,
+      "event_date_key": "2025-03-13",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000023"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000024,
+      "visit_window": "POST",
+      "day_offset": 3,
+      "event_date_key": "2025-03-15",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.4,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000024"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000025,
+      "visit_window": "POST",
+      "day_offset": 4,
+      "event_date_key": "2025-03-16",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 2.0,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000025"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000026,
+      "visit_window": "POST",
+      "day_offset": 5,
+      "event_date_key": "2025-03-17",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000026"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000027,
+      "visit_window": "POST",
+      "day_offset": 5,
+      "event_date_key": "2025-03-17",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.8,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000027"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000028,
+      "visit_window": "POST",
+      "day_offset": 7,
+      "event_date_key": "2025-03-19",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000028"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000029,
+      "visit_window": "POST",
+      "day_offset": 8,
+      "event_date_key": "2025-03-20",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.9,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000029"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000030,
+      "visit_window": "POST",
+      "day_offset": 9,
+      "event_date_key": "2025-03-21",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.6,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000030"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000031,
+      "visit_window": "POST",
+      "day_offset": 9,
+      "event_date_key": "2025-03-21",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.6,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000031"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000032,
+      "visit_window": "POST",
+      "day_offset": 11,
+      "event_date_key": "2025-03-23",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.8,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000032"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000033,
+      "visit_window": "POST",
+      "day_offset": 12,
+      "event_date_key": "2025-03-24",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.5,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000033"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000034,
+      "visit_window": "POST",
+      "day_offset": 13,
+      "event_date_key": "2025-03-25",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000034"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000035,
+      "visit_window": "POST",
+      "day_offset": 13,
+      "event_date_key": "2025-03-25",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000035"
+    },
+    {
+      "visit_key": 1,
+      "gdelt_event_id": 1200000036,
+      "visit_window": "POST",
+      "day_offset": 15,
+      "event_date_key": "2025-03-27",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 1.7,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000036"
+    }
+  ],
+  "3": [
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000014,
+      "visit_window": "PRE",
+      "day_offset": -15,
+      "event_date_key": "2025-03-05",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.1,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000014"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000015,
+      "visit_window": "PRE",
+      "day_offset": -15,
+      "event_date_key": "2025-03-05",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000015"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000016,
+      "visit_window": "PRE",
+      "day_offset": -13,
+      "event_date_key": "2025-03-07",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.4,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000016"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000017,
+      "visit_window": "PRE",
+      "day_offset": -12,
+      "event_date_key": "2025-03-08",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -5.4,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000017"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000018,
+      "visit_window": "PRE",
+      "day_offset": -11,
+      "event_date_key": "2025-03-09",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.8,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000018"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000019,
+      "visit_window": "PRE",
+      "day_offset": -11,
+      "event_date_key": "2025-03-09",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000019"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000020,
+      "visit_window": "PRE",
+      "day_offset": -9,
+      "event_date_key": "2025-03-11",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.6,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000020"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000021,
+      "visit_window": "PRE",
+      "day_offset": -8,
+      "event_date_key": "2025-03-12",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000021"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000022,
+      "visit_window": "PRE",
+      "day_offset": -7,
+      "event_date_key": "2025-03-13",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.1,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000022"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000023,
+      "visit_window": "PRE",
+      "day_offset": -7,
+      "event_date_key": "2025-03-13",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000023"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000024,
+      "visit_window": "PRE",
+      "day_offset": -5,
+      "event_date_key": "2025-03-15",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.4,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000024"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000025,
+      "visit_window": "PRE",
+      "day_offset": -4,
+      "event_date_key": "2025-03-16",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 2.0,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000025"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000026,
+      "visit_window": "PRE",
+      "day_offset": -3,
+      "event_date_key": "2025-03-17",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000026"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000027,
+      "visit_window": "PRE",
+      "day_offset": -3,
+      "event_date_key": "2025-03-17",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.8,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000027"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000028,
+      "visit_window": "PRE",
+      "day_offset": -1,
+      "event_date_key": "2025-03-19",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000028"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000032,
+      "visit_window": "POST",
+      "day_offset": 2,
+      "event_date_key": "2025-03-23",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.8,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000032"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000033,
+      "visit_window": "POST",
+      "day_offset": 3,
+      "event_date_key": "2025-03-24",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.5,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000033"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000034,
+      "visit_window": "POST",
+      "day_offset": 4,
+      "event_date_key": "2025-03-25",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000034"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000035,
+      "visit_window": "POST",
+      "day_offset": 4,
+      "event_date_key": "2025-03-25",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000035"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000036,
+      "visit_window": "POST",
+      "day_offset": 6,
+      "event_date_key": "2025-03-27",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 1.7,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000036"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000037,
+      "visit_window": "POST",
+      "day_offset": 7,
+      "event_date_key": "2025-03-28",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.4,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000037"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000038,
+      "visit_window": "POST",
+      "day_offset": 8,
+      "event_date_key": "2025-03-29",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000038"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000039,
+      "visit_window": "POST",
+      "day_offset": 8,
+      "event_date_key": "2025-03-29",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 2.0,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000039"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000040,
+      "visit_window": "POST",
+      "day_offset": 10,
+      "event_date_key": "2025-03-31",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000040"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000041,
+      "visit_window": "POST",
+      "day_offset": 11,
+      "event_date_key": "2025-04-01",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.0,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000041"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000042,
+      "visit_window": "POST",
+      "day_offset": 12,
+      "event_date_key": "2025-04-02",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.6,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000042"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000043,
+      "visit_window": "POST",
+      "day_offset": 12,
+      "event_date_key": "2025-04-02",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.9,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000043"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000044,
+      "visit_window": "POST",
+      "day_offset": 14,
+      "event_date_key": "2025-04-04",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000044"
+    },
+    {
+      "visit_key": 3,
+      "gdelt_event_id": 1200000045,
+      "visit_window": "POST",
+      "day_offset": 15,
+      "event_date_key": "2025-04-05",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.8,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000045"
+    }
+  ],
+  "6": [
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000059,
+      "visit_window": "PRE",
+      "day_offset": -15,
+      "event_date_key": "2025-03-30",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000059"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000060,
+      "visit_window": "PRE",
+      "day_offset": -14,
+      "event_date_key": "2025-03-31",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.8,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000060"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000061,
+      "visit_window": "PRE",
+      "day_offset": -13,
+      "event_date_key": "2025-04-01",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -5.0,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000061"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000062,
+      "visit_window": "PRE",
+      "day_offset": -13,
+      "event_date_key": "2025-04-01",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.6,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000062"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000063,
+      "visit_window": "PRE",
+      "day_offset": -11,
+      "event_date_key": "2025-04-03",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000063"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000064,
+      "visit_window": "PRE",
+      "day_offset": -10,
+      "event_date_key": "2025-04-04",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000064"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000065,
+      "visit_window": "PRE",
+      "day_offset": -9,
+      "event_date_key": "2025-04-05",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.9,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000065"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000066,
+      "visit_window": "PRE",
+      "day_offset": -9,
+      "event_date_key": "2025-04-05",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.1,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000066"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000067,
+      "visit_window": "PRE",
+      "day_offset": -7,
+      "event_date_key": "2025-04-07",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.6,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000067"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000068,
+      "visit_window": "PRE",
+      "day_offset": -6,
+      "event_date_key": "2025-04-08",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -4.2,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000068"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000069,
+      "visit_window": "PRE",
+      "day_offset": -5,
+      "event_date_key": "2025-04-09",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.0,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000069"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000070,
+      "visit_window": "PRE",
+      "day_offset": -5,
+      "event_date_key": "2025-04-09",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.5,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000070"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000071,
+      "visit_window": "PRE",
+      "day_offset": -3,
+      "event_date_key": "2025-04-11",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000071"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000072,
+      "visit_window": "PRE",
+      "day_offset": -2,
+      "event_date_key": "2025-04-12",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.1,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000072"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000073,
+      "visit_window": "PRE",
+      "day_offset": -1,
+      "event_date_key": "2025-04-13",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000073"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000074,
+      "visit_window": "PRE",
+      "day_offset": -1,
+      "event_date_key": "2025-04-13",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.8,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000074"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000076,
+      "visit_window": "POST",
+      "day_offset": 1,
+      "event_date_key": "2025-04-16",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.2,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000076"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000077,
+      "visit_window": "POST",
+      "day_offset": 2,
+      "event_date_key": "2025-04-17",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.1,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000077"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000078,
+      "visit_window": "POST",
+      "day_offset": 2,
+      "event_date_key": "2025-04-17",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.0,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000078"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000079,
+      "visit_window": "POST",
+      "day_offset": 4,
+      "event_date_key": "2025-04-19",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000079"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000080,
+      "visit_window": "POST",
+      "day_offset": 5,
+      "event_date_key": "2025-04-20",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.1,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000080"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000081,
+      "visit_window": "POST",
+      "day_offset": 6,
+      "event_date_key": "2025-04-21",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.8,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000081"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000082,
+      "visit_window": "POST",
+      "day_offset": 6,
+      "event_date_key": "2025-04-21",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.8,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000082"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000083,
+      "visit_window": "POST",
+      "day_offset": 8,
+      "event_date_key": "2025-04-23",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 2.0,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000083"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000084,
+      "visit_window": "POST",
+      "day_offset": 9,
+      "event_date_key": "2025-04-24",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000084"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000085,
+      "visit_window": "POST",
+      "day_offset": 10,
+      "event_date_key": "2025-04-25",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.4,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000085"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000086,
+      "visit_window": "POST",
+      "day_offset": 10,
+      "event_date_key": "2025-04-25",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.4,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000086"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000087,
+      "visit_window": "POST",
+      "day_offset": 12,
+      "event_date_key": "2025-04-27",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.9,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000087"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000088,
+      "visit_window": "POST",
+      "day_offset": 13,
+      "event_date_key": "2025-04-28",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.6,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000088"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000089,
+      "visit_window": "POST",
+      "day_offset": 14,
+      "event_date_key": "2025-04-29",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000089"
+    },
+    {
+      "visit_key": 6,
+      "gdelt_event_id": 1200000090,
+      "visit_window": "POST",
+      "day_offset": 14,
+      "event_date_key": "2025-04-29",
+      "actor1_country": {
+        "iso3_code": "JPN",
+        "country_name": "Japan"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.2,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000090"
+    }
+  ],
+  "4": [],
+  "5": [
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000091,
+      "visit_window": "PRE",
+      "day_offset": -15,
+      "event_date_key": "2025-05-18",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000091"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000092,
+      "visit_window": "PRE",
+      "day_offset": -15,
+      "event_date_key": "2025-05-18",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.2,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000092"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000093,
+      "visit_window": "PRE",
+      "day_offset": -14,
+      "event_date_key": "2025-05-19",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 0.8,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000093"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000094,
+      "visit_window": "PRE",
+      "day_offset": -13,
+      "event_date_key": "2025-05-20",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -5.0,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000094"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000095,
+      "visit_window": "PRE",
+      "day_offset": -12,
+      "event_date_key": "2025-05-21",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.2,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000095"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000096,
+      "visit_window": "PRE",
+      "day_offset": -11,
+      "event_date_key": "2025-05-22",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000096"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000097,
+      "visit_window": "PRE",
+      "day_offset": -11,
+      "event_date_key": "2025-05-22",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.6,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000097"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000098,
+      "visit_window": "PRE",
+      "day_offset": -10,
+      "event_date_key": "2025-05-23",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000098"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000099,
+      "visit_window": "PRE",
+      "day_offset": -9,
+      "event_date_key": "2025-05-24",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.9,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000099"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000100,
+      "visit_window": "PRE",
+      "day_offset": -8,
+      "event_date_key": "2025-05-25",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.5,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000100"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000101,
+      "visit_window": "PRE",
+      "day_offset": -7,
+      "event_date_key": "2025-05-26",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.6,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000101"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000102,
+      "visit_window": "PRE",
+      "day_offset": -7,
+      "event_date_key": "2025-05-26",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -5.8,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000102"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000103,
+      "visit_window": "PRE",
+      "day_offset": -6,
+      "event_date_key": "2025-05-27",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "130",
+      "is_cooperative": false,
+      "goldstein_scale": -4.4,
+      "avg_tone": -4.2,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000103"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000104,
+      "visit_window": "PRE",
+      "day_offset": -5,
+      "event_date_key": "2025-05-28",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.0,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000104"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000105,
+      "visit_window": "PRE",
+      "day_offset": -4,
+      "event_date_key": "2025-05-29",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.9,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000105"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000106,
+      "visit_window": "PRE",
+      "day_offset": -3,
+      "event_date_key": "2025-05-30",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000106"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000107,
+      "visit_window": "PRE",
+      "day_offset": -3,
+      "event_date_key": "2025-05-30",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -5.7,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000107"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000108,
+      "visit_window": "PRE",
+      "day_offset": -2,
+      "event_date_key": "2025-05-31",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "163",
+      "is_cooperative": false,
+      "goldstein_scale": -8.0,
+      "avg_tone": -6.1,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000108"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000109,
+      "visit_window": "PRE",
+      "day_offset": -1,
+      "event_date_key": "2025-06-01",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -2.7,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000109"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000111,
+      "visit_window": "POST",
+      "day_offset": 1,
+      "event_date_key": "2025-06-03",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.6,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000111"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000112,
+      "visit_window": "POST",
+      "day_offset": 1,
+      "event_date_key": "2025-06-03",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.6,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000112"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000113,
+      "visit_window": "POST",
+      "day_offset": 2,
+      "event_date_key": "2025-06-04",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 1.2,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000113"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000114,
+      "visit_window": "POST",
+      "day_offset": 3,
+      "event_date_key": "2025-06-05",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.1,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000114"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000115,
+      "visit_window": "POST",
+      "day_offset": 4,
+      "event_date_key": "2025-06-06",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.6,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000115"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000116,
+      "visit_window": "POST",
+      "day_offset": 5,
+      "event_date_key": "2025-06-07",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000116"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000117,
+      "visit_window": "POST",
+      "day_offset": 5,
+      "event_date_key": "2025-06-07",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.5,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000117"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000118,
+      "visit_window": "POST",
+      "day_offset": 6,
+      "event_date_key": "2025-06-08",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.1,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000118"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000119,
+      "visit_window": "POST",
+      "day_offset": 7,
+      "event_date_key": "2025-06-09",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.8,
+      "num_mentions": 6,
+      "source_url": "https://example.org/news/1200000119"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000120,
+      "visit_window": "POST",
+      "day_offset": 8,
+      "event_date_key": "2025-06-10",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.4,
+      "num_mentions": 7,
+      "source_url": "https://example.org/news/1200000120"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000121,
+      "visit_window": "POST",
+      "day_offset": 9,
+      "event_date_key": "2025-06-11",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "036",
+      "is_cooperative": true,
+      "goldstein_scale": 4.0,
+      "avg_tone": 2.0,
+      "num_mentions": 8,
+      "source_url": "https://example.org/news/1200000121"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000122,
+      "visit_window": "POST",
+      "day_offset": 9,
+      "event_date_key": "2025-06-11",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -3.9,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000122"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000123,
+      "visit_window": "POST",
+      "day_offset": 10,
+      "event_date_key": "2025-06-12",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "112",
+      "is_cooperative": false,
+      "goldstein_scale": -2.0,
+      "avg_tone": -4.3,
+      "num_mentions": 9,
+      "source_url": "https://example.org/news/1200000123"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000124,
+      "visit_window": "POST",
+      "day_offset": 11,
+      "event_date_key": "2025-06-13",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.4,
+      "num_mentions": 10,
+      "source_url": "https://example.org/news/1200000124"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000125,
+      "visit_window": "POST",
+      "day_offset": 12,
+      "event_date_key": "2025-06-14",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 2.0,
+      "num_mentions": 2,
+      "source_url": "https://example.org/news/1200000125"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000126,
+      "visit_window": "POST",
+      "day_offset": 13,
+      "event_date_key": "2025-06-15",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "057",
+      "is_cooperative": true,
+      "goldstein_scale": 8.0,
+      "avg_tone": 2.9,
+      "num_mentions": 3,
+      "source_url": "https://example.org/news/1200000126"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000127,
+      "visit_window": "POST",
+      "day_offset": 13,
+      "event_date_key": "2025-06-15",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 1.0,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000127"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000128,
+      "visit_window": "POST",
+      "day_offset": 14,
+      "event_date_key": "2025-06-16",
+      "actor1_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "actor2_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "cameo_code": "042",
+      "is_cooperative": true,
+      "goldstein_scale": 1.9,
+      "avg_tone": 2.6,
+      "num_mentions": 4,
+      "source_url": "https://example.org/news/1200000128"
+    },
+    {
+      "visit_key": 5,
+      "gdelt_event_id": 1200000129,
+      "visit_window": "POST",
+      "day_offset": 15,
+      "event_date_key": "2025-06-17",
+      "actor1_country": {
+        "iso3_code": "FRA",
+        "country_name": "France"
+      },
+      "actor2_country": {
+        "iso3_code": "DEU",
+        "country_name": "Germany"
+      },
+      "cameo_code": "061",
+      "is_cooperative": true,
+      "goldstein_scale": 6.4,
+      "avg_tone": 1.2,
+      "num_mentions": 5,
+      "source_url": "https://example.org/news/1200000129"
+    }
+  ]
+}
