@@ -14,14 +14,14 @@ const DAYS = 15; // length of each window in v_visit_event
 
 const DATE = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const date = (day: string) => DATE.format(new Date(day));
-const dateRange = (from: string, to: string) => DATE.formatRange(new Date(from), new Date(to)); // "10 – 12 Mar 2025"
+export const dateRange = (from: string, to: string) => DATE.formatRange(new Date(from), new Date(to)); // "10 – 12 Mar 2025"
 const signed = (day: number) => (day > 0 ? `+${day}` : `−${-day}`);
 
 // Emoji flag from the alpha-2 code (regional indicator letters); empty when the code is unknown.
-const flag = (country: Country) =>
+export const flag = (country: Country) =>
   String.fromCodePoint(...[...(alpha3ToAlpha2(country.iso3_code) ?? "")].map((c) => 0x1f1a5 + c.charCodeAt(0)));
 
-const VISIT_TYPE: Record<VisitTypeLabel, string> = {
+export const VISIT_TYPE: Record<VisitTypeLabel, string> = {
   state: "State visit",
   working: "Working visit",
   summit: "Summit",
@@ -313,16 +313,13 @@ const countryOf = (leader: Leader) => leader.offices[leader.offices.length - 1].
 
 export default function GlobeView() {
   const leaders = useApi(api.leaders, "leaders");
-  const [home, setHome] = useState("");
   const [leaderId, setLeaderId] = useState("");
   const [range, setRange] = useState(SCOPE);
   const [visitKey, setVisitKey] = useState<number | null>(null);
   const visits = useApi(leaderId ? () => api.visits(leaderId) : null, leaderId);
 
   const all = leaders.data ?? [];
-  const homes = [...new Map(all.map((l) => [countryOf(l).iso3_code, countryOf(l)])).values()].sort((a, b) =>
-    a.country_name.localeCompare(b.country_name),
-  );
+  const leader = all.find((l) => l.leader_id === leaderId);
   const list: VisitSummary[] = ((leaderId && visits.data) || [])
     .filter((v) => v.start_date_key <= range.to && v.end_date_key >= range.from)
     .sort((a, b) => b.start_date_key.localeCompare(a.start_date_key)); // latest first
@@ -331,13 +328,6 @@ export default function GlobeView() {
   const chooseLeader = (id: string) => {
     setLeaderId(id);
     setVisitKey(null);
-    const leader = all.find((l) => l.leader_id === id);
-    if (leader) setHome(countryOf(leader).iso3_code);
-  };
-  const chooseHome = (iso3: string) => {
-    setHome(iso3);
-    const leader = all.find((l) => l.leader_id === leaderId);
-    if (leader && iso3 && countryOf(leader).iso3_code !== iso3) chooseLeader("");
   };
   // A click on a country opens its latest visit (the list is latest first).
   const pick = (iso3: string) => setVisitKey(list.find((v) => v.host_country.iso3_code === iso3)!.visit_key);
@@ -349,20 +339,9 @@ export default function GlobeView() {
         <label htmlFor="leader">Leader</label>
         <select id="leader" value={leaderId} onChange={(e) => chooseLeader(e.target.value)}>
           <option value="">Choose a leader</option>
-          {all
-            .filter((l) => !home || countryOf(l).iso3_code === home)
-            .map((l) => (
-              <option key={l.leader_id} value={l.leader_id}>
-                {l.leader_name}
-              </option>
-            ))}
-        </select>
-        <label htmlFor="home">Home country</label>
-        <select id="home" value={home} onChange={(e) => chooseHome(e.target.value)}>
-          <option value="">All countries</option>
-          {homes.map((c) => (
-            <option key={c.iso3_code} value={c.iso3_code}>
-              {flag(c)} {c.country_name}
+          {all.map((l) => (
+            <option key={l.leader_id} value={l.leader_id}>
+              {l.leader_name}
             </option>
           ))}
         </select>
@@ -412,7 +391,7 @@ export default function GlobeView() {
           ))}
         </ul>
       </aside>
-      <Globe visits={list} home={home || undefined} selected={selected} onPick={pick} />
+      <Globe visits={list} home={leader && countryOf(leader).iso3_code} selected={selected} onPick={pick} />
       {selected ? (
         <VisitDetails key={selected.visit_key} visitKey={selected.visit_key} />
       ) : (

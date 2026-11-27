@@ -1,6 +1,7 @@
 // The Globe view on the mock responses: filters, markers on the globe, the visit card (counts, flags, deltas) and the
 // related events (chart and table with sources). Date ranges hold thin spaces around the dash, hence the \s.
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import mockLeaders from "../src/mocks/leaders.json";
 import { afterEach, expect, test } from "vitest";
 import GlobeView from "../src/GlobeView";
 
@@ -15,7 +16,6 @@ const card = (label: string) => screen.getByRole("group", { name: label }).textC
 
 test("a click on a visited country's marker opens its visit, with counts and flags beside the changes", async () => {
   await chooseLeader("Q1"); // Leader A (France) visited India, Japan and Germany
-  expect((screen.getByLabelText("Home country") as HTMLSelectElement).value).toBe("FRA");
   fireEvent.click(await screen.findByRole("button", { name: "India, 1 visit" }));
 
   expect(await screen.findByRole("heading", { name: "France → India" })).toBeTruthy();
@@ -75,15 +75,14 @@ test("a visit without events shows dashes, not zeros, and no chart", async () =>
   expect(screen.queryByRole("img")).toBeNull();
 });
 
-test("the home country narrows the leaders and the date range narrows the visits", async () => {
+test("the leader list always holds every leader and the date range narrows the visits", async () => {
   await chooseLeader("Q1");
   expect(await screen.findByRole("heading", { name: "Official visits (3)" })).toBeTruthy();
   fireEvent.change(screen.getByLabelText("From"), { target: { value: "2025-03-01" } });
   expect(screen.getByRole("heading", { name: "Official visits (2)" })).toBeTruthy();
   expect(screen.queryByRole("button", { name: /^India, .*2025$/ })).toBeNull();
 
-  fireEvent.change(screen.getByLabelText("Home country"), { target: { value: "JPN" } });
-  expect((screen.getByLabelText("Leader") as HTMLSelectElement).value).toBe("");
+  expect(screen.queryByLabelText("Home country")).toBeNull();
   const leaders = within(screen.getByLabelText("Leader")).getAllByRole("option");
-  expect(leaders.map((o) => o.textContent)).toEqual(["Choose a leader", "Leader B"]);
+  expect(leaders).toHaveLength(1 + mockLeaders.length);
 });
