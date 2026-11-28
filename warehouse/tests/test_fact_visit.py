@@ -42,7 +42,7 @@ CREATE TABLE stg_visit (leader_id VARCHAR, host_country_iso3 VARCHAR, start_date
                         wiki_page_id BIGINT, wiki_revision_id BIGINT);
 INSERT INTO stg_visit VALUES
     -- valid
-    ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', FALSE, 100, 1),
+    ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', NULL,  100, 1),  -- unknown multilateral status is accepted
     ('Q1', 'JPN', DATE '2025-03-31', DATE '2025-04-01', FALSE, 100, 1),  -- last day of version 10
     ('Q1', 'JPN', DATE '2025-04-01', DATE '2025-04-04', TRUE,  100, 2),  -- first day of version 11
     -- one broken row per rule
@@ -51,7 +51,7 @@ INSERT INTO stg_visit VALUES
     ('Q1', 'FRA', DATE '2025-02-10', DATE '2025-02-11', FALSE, 100, 1),     -- visit_03
     ('Q1', 'DEU', DATE '2025-02-12', DATE '2025-02-10', FALSE, 100, 1),     -- visit_04
     ('Q1', 'JPN', DATE '2025-06-29', DATE '2025-07-20', FALSE, 100, 1),     -- visit_05
-    ('Q1', 'DEU', DATE '2025-01-20', DATE '2025-01-21', NULL,  100, 1),     -- visit_06
+    ('Q1', 'DEU', DATE '2025-01-20', DATE '2025-01-21', FALSE, NULL, 1),     -- visit_06: missing Wikipedia page id
     ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', FALSE, 100, 0);     -- visit_07 (older revision)
 """
 
@@ -90,6 +90,13 @@ def test_each_broken_visit_is_quarantined_under_its_rule():
     assert connection.execute(
         "SELECT row_data->>'wiki_revision_id' FROM quality_quarantine WHERE rule_id = 'visit_07_duplicate'"
     ).fetchone()[0] == "0"
+
+
+def test_unknown_multilateral_status_is_loaded_as_null():
+    connection = build()
+    assert connection.execute(
+        "SELECT count(*) FROM fact_visit WHERE is_multilateral IS NULL"
+    ).fetchone()[0] == 1
 
 
 def test_rebuild_gives_the_same_table():

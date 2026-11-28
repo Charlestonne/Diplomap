@@ -85,8 +85,8 @@ INSERT OR REPLACE INTO quality_rule VALUES
     $$start_date_key IS NULL OR end_date_key IS NULL OR end_date_key < start_date_key$$),
 ('visit_05_out_of_scope', 'stg_fact_visit', 'P4', 'Start outside 2025-01-01..2025-06-30 or end after 2025-07-15 (dim_date)',
     $$start_date_key NOT BETWEEN DATE '2025-01-01' AND DATE '2025-06-30' OR end_date_key > DATE '2025-07-15'$$),
-('visit_06_field_missing', 'stg_fact_visit', 'P4', 'is_multilateral or Wikipedia lineage (page, revision) missing',
-    $$is_multilateral IS NULL OR wiki_page_id IS NULL OR wiki_revision_id IS NULL$$),
+('visit_06_field_missing', 'stg_fact_visit', 'P4', 'Wikipedia lineage (page, revision) missing',
+    $$wiki_page_id IS NULL OR wiki_revision_id IS NULL$$),
 ('visit_07_duplicate', 'stg_fact_visit', 'P4', 'Same leader, host and start date already seen (latest revision kept)',
     $$row_number() OVER (PARTITION BY leader_id, host_country_key, start_date_key ORDER BY wiki_revision_id DESC) > 1$$);
 -- To add when dim_country and dim_event_type exist (P3-10): country and CAMEO codes known by the dimensions.
