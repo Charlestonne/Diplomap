@@ -60,6 +60,10 @@ columns:
     type: BOOLEAN
     nullable: true
     description: TRUE is confirmed participation; FALSE needs explicit evidence; NULL is unknown.
+  - name: is_transit
+    type: BOOLEAN
+    nullable: true
+    description: TRUE when transit wording is confirmed for the host country; FALSE when details are present without a match; NULL when details are empty.
   - name: wiki_language
     type: VARCHAR
     nullable: false
@@ -122,6 +126,8 @@ business_rules:
   - Repeated source coordinates violate row identity; no duplicate is silently discarded.
   - Repeated combinations of leader_qid, host_country_qid, start_date, end_date and areas_visited_raw within a collection require review, following the existing possible-duplicate rule.
   - Preserve is_multilateral NULL; do not replace it with FALSE. Retain available evidence in source_record.
+  - Derive is_transit from details_raw with a case-insensitive transit regex. A match must start the cell or occur in a sentence naming the host country.
+  - is_transit is TRUE for a guarded match, FALSE for non-empty details without a match, and NULL for empty details.
   - Dimension keys, visit type, CAMEO mappings, GDELT matching and PRE/POST windows are deferred and not required by this staging contract.
   - Read visits.json once; unresolved_visits.json is its review subset, not another source to append.
   - Rejected rows retain their original content, collection, source location and rejection reasons in quarantine.

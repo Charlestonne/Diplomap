@@ -49,6 +49,13 @@ columns:
       multilateral diplomatic event. TRUE means confirmed participation,
       FALSE requires explicit evidence or a documented review establishing
       the absence of such participation; NULL means insufficient information.
+  - name: is_transit
+    type: BOOLEAN
+    nullable: true
+    description: >
+      TRUE when the visit details identify a transit or stopover under the
+      host-country guard rule; FALSE when non-empty details do not match;
+      NULL when details are empty.
   - name: matched_in_gdelt
     type: BOOLEAN
     nullable: false
@@ -80,6 +87,7 @@ columns:
 business_rules:
   - Absence from a multilateral meeting calendar does not imply FALSE; unresolved cases remain NULL including in production.
   - The current Wikipedia calendar enrichment produces TRUE or NULL only. It does not generate FALSE automatically.
+  - is_transit is a conservative text-derived flag. A transit expression must start the details cell or be in a sentence naming the host country.
   - Multilateral evidence and extraction statuses are retained outside fact_visit; they do not add columns to this table.
   - Dates are inclusive. duration_days equals end minus start plus 1.
   - Windows are fixed at 15 days; the DDL enforces the arithmetic. Window overlap between visits is a derived property, handled in the KPI layer.
