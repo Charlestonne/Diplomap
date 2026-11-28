@@ -1,3 +1,9 @@
-# Dependencies used by the DuckDB warehouse tasks.
+# Dependencies imported by the ingestion DAGs and warehouse loaders.
+# They are installed in the Airflow image with Airflow's official constraints.
+beautifulsoup4
 duckdb
+lxml
+pandas
 psutil
+PyYAML
+requests
