@@ -30,7 +30,7 @@ def build_fact_visit(connection: duckdb.DuckDBPyConnection) -> int:
         """
         INSERT INTO fact_visit
         SELECT row_number() OVER (ORDER BY start_date_key, leader_id, host_country_iso3),
-               leader_key, visitor_country_key, host_country_key, visit_type_key,
+               leader_key, visitor_country_key, host_country_key,
                start_date_key, end_date_key, duration_days, is_multilateral, matched_in_gdelt,
                wiki_page_id, wiki_revision_id,
                pre_window_start, pre_window_end, post_window_start, post_window_end

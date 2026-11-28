@@ -27,11 +27,6 @@ columns:
     nullable: false
     foreign_key: dim_country.country_key
     description: Country visited.
-  - name: visit_type_key
-    type: INTEGER
-    nullable: false
-    foreign_key: dim_visit_type.visit_type_key
-    description: Category of the visit.
   - name: start_date_key
     type: DATE
     nullable: false

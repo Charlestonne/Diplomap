@@ -6,7 +6,7 @@ Two atomic fact tables (fact_visit, fact_gdelt_event) linked only through the
 conformed dimensions dim_country and dim_date. The KPI layer (v_kpi_visit,
 v_visit_event) is built on top of these tables and lives in warehouse/views/.
 
-The script is a full rebuild: it drops the seven tables in reverse dependency
+The script is a full rebuild: it drops the six tables in reverse dependency
 order, then recreates them. Everything is created in the default schema (main).
 Constraints checked here are row-level rules; cross-table rules (for example
 "visitor country = country represented by the leader") belong to the quality
@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS fact_gdelt_event;
 DROP TABLE IF EXISTS fact_visit;
 DROP TABLE IF EXISTS dim_leader;
 DROP TABLE IF EXISTS dim_event_type;
+-- Remove the legacy visit-type dimension when rebuilding an existing database.
 DROP TABLE IF EXISTS dim_visit_type;
 DROP TABLE IF EXISTS dim_date;
 DROP TABLE IF EXISTS dim_country;
@@ -55,13 +56,6 @@ CREATE TABLE dim_event_type (
     CHECK (is_cooperative = (quad_class IN (1, 2)))
 );
 
-/* Static closed list defined by the project. */
-CREATE TABLE dim_visit_type (
-    visit_type_key    INTEGER NOT NULL PRIMARY KEY,
-    visit_type_label  VARCHAR NOT NULL UNIQUE
-        CHECK (visit_type_label IN ('state', 'working', 'summit', 'ceremony', 'unknown'))
-);
-
 /* SCD Type 2: one row per leader and office period. valid_to is the last day
    in office (inclusive); NULL is an open interval with no recorded end date */
 CREATE TABLE dim_leader (
@@ -84,7 +78,6 @@ CREATE TABLE fact_visit (
     leader_key           INTEGER NOT NULL REFERENCES dim_leader (leader_key),
     visitor_country_key  INTEGER NOT NULL REFERENCES dim_country (country_key),
     host_country_key     INTEGER NOT NULL REFERENCES dim_country (country_key),
-    visit_type_key       INTEGER NOT NULL REFERENCES dim_visit_type (visit_type_key),
     start_date_key       DATE    NOT NULL REFERENCES dim_date (date_key),
     end_date_key         DATE    NOT NULL REFERENCES dim_date (date_key),
     duration_days        INTEGER NOT NULL,

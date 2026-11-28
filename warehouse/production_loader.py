@@ -74,7 +74,7 @@ def validate_windows(connection, window_days):
 
 def production_summary(connection):
     table_names = (
-        "dim_country", "dim_date", "dim_event_type", "dim_visit_type",
+        "dim_country", "dim_date", "dim_event_type",
         "dim_leader", "fact_visit", "fact_gdelt_event",
     )
     return {

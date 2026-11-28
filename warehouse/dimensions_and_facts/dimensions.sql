@@ -73,11 +73,3 @@ SELECT row_number() OVER (ORDER BY office.leader_qid, office.valid_from)::INTEGE
 FROM stg_leader AS office
 JOIN dim_country AS country
   ON country.iso3_code = office.represented_country_iso3;
-
-INSERT INTO dim_visit_type (visit_type_key, visit_type_label)
-VALUES
-    (1, 'state'),
-    (2, 'working'),
-    (3, 'summit'),
-    (4, 'ceremony'),
-    (5, 'unknown');

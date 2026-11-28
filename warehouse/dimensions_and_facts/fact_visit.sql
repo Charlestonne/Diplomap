@@ -4,7 +4,7 @@
 -- Input expected from P3 (staging of the Wikipedia trips), one row per trip and host country:
 --   stg_visit(leader_id VARCHAR      -- Wikidata QID
 --             host_country_iso3 VARCHAR, start_date DATE, end_date DATE,
---             visit_type_label VARCHAR, is_multilateral BOOLEAN,
+--             is_multilateral BOOLEAN,
 --             wiki_page_id BIGINT, wiki_revision_id BIGINT)
 -- A missing key gives a NULL here on purpose: the gate quarantines the row with its reason instead of dropping it.
 
@@ -14,7 +14,6 @@ SELECT v.leader_id,
        l.leader_key,                                    -- version valid on the first day of the visit
        l.represented_country_key                        AS visitor_country_key,
        h.country_key                                    AS host_country_key,
-       coalesce(t.visit_type_key, u.visit_type_key)     AS visit_type_key,   -- unlisted label -> 'unknown'
        v.start_date                                     AS start_date_key,
        v.end_date                                       AS end_date_key,
        (v.end_date - v.start_date) + 1                  AS duration_days,
@@ -42,5 +41,4 @@ LEFT JOIN dim_leader l
        ON l.leader_id = v.leader_id
       AND v.start_date BETWEEN l.valid_from AND coalesce(l.valid_to, DATE '9999-12-31')
 LEFT JOIN dim_country h    ON h.iso3_code = v.host_country_iso3
-LEFT JOIN dim_visit_type t ON t.visit_type_label = v.visit_type_label
-CROSS JOIN (SELECT visit_type_key FROM dim_visit_type WHERE visit_type_label = 'unknown') u;
+;
