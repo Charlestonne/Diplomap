@@ -32,18 +32,17 @@ from warehouse.views.build_views import build_views  # noqa: E402
 SEED = """
 INSERT INTO dim_country (country_key, country_name, iso3_code, fips_code, cameo_code, region) VALUES
     (1, 'France', 'FRA', 'FR', 'FRA', NULL), (2, 'Japan', 'JPN', 'JA', 'JPN', NULL);
-INSERT INTO dim_visit_type VALUES (1, 'state'), (2, 'unknown');
 INSERT INTO dim_event_type VALUES (1, '042', '04', 1, TRUE), (2, '190', '19', 4, FALSE);
 INSERT INTO dim_leader VALUES (1, 'Q1', 'Leader A', 'President', 1, DATE '2020-01-01', NULL);
 INSERT INTO dim_date
 SELECT CAST(d AS DATE), year(d), month(d), week(d), day(d)
 FROM generate_series(DATE '2024-12-17', DATE '2025-07-15', INTERVAL 1 DAY) AS t(d);
 CREATE TABLE stg_visit (leader_id VARCHAR, host_country_iso3 VARCHAR, start_date DATE, end_date DATE,
-                        visit_type_label VARCHAR, is_multilateral BOOLEAN,
+                        is_multilateral BOOLEAN, is_transit BOOLEAN,
                         wiki_page_id BIGINT, wiki_revision_id BIGINT);
 INSERT INTO stg_visit VALUES
-    ('Q1', 'JPN', DATE '2025-03-10', DATE '2025-03-12', 'state', FALSE, 100, 1),
-    ('Q9', 'JPN', DATE '2025-03-10', DATE '2025-03-12', 'state', FALSE, 100, 1);
+    ('Q1', 'JPN', DATE '2025-03-10', DATE '2025-03-12', FALSE, FALSE, 100, 1),
+    ('Q9', 'JPN', DATE '2025-03-10', DATE '2025-03-12', FALSE, FALSE, 100, 1);
 CREATE TABLE stg_gdelt_event (event_date DATE, actor1_country_code VARCHAR, actor2_country_code VARCHAR,
                               event_code VARCHAR);
 INSERT INTO stg_gdelt_event VALUES (DATE '2025-03-11', 'FRA', 'JPN', '042');

@@ -48,7 +48,6 @@ DEFAULT_EXPECTED_TABLES: tuple[str, ...] = (
     "dim_date",
     "dim_event_type",
     "dim_leader",
-    "dim_visit_type",
     "fact_visit",
     "fact_gdelt_event",
 )

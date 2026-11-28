@@ -115,7 +115,6 @@ INSERT INTO dim_country (country_key, country_name, iso3_code, fips_code, cameo_
     (3, 'Japan', 'JPN', 'JA', 'JPN', NULL), (4, 'United States', 'USA', 'US', 'USA', NULL),
     (5, 'Brazil', 'BRA', 'BR', 'BRA', NULL), (6, 'India', 'IND', 'IN', 'IND', NULL),
     (7, 'China', 'CHN', 'CH', 'CHN', NULL), (8, 'Italy', 'ITA', 'IT', 'ITA', NULL);
-INSERT INTO dim_visit_type VALUES (1, 'state'), (2, 'working'), (3, 'summit'), (4, 'ceremony'), (5, 'unknown');
 INSERT INTO dim_leader VALUES
     (1, 'Q100001', 'Sample Leader A', 'President', 1, DATE '2022-05-14', NULL),
     (2, 'Q100002', 'Sample Leader B', 'Chancellor', 2, DATE '2021-12-08', NULL),
@@ -128,8 +127,7 @@ FROM generate_series(DATE '2024-12-17', DATE '2025-07-15', INTERVAL 1 DAY) AS t(
 # wiki_page_id of each invalid row -> the rule that must quarantine it.
 SAMPLE_INVALID = {
     9901: "visit_01_leader_unknown", 9902: "visit_02_host_unknown", 9903: "visit_03_same_country",
-    9904: "visit_04_dates_invalid", 9905: "visit_05_out_of_scope", 9906: "visit_06_field_missing",
-    9907: "visit_07_duplicate",
+    9904: "visit_04_dates_invalid", 9905: "visit_05_out_of_scope", 9907: "visit_07_duplicate",
 }
 
 
@@ -139,11 +137,13 @@ def test_c04_sample_valid_rows_load_and_each_invalid_row_is_quarantined():
     connection.execute(SAMPLE_DIMENSIONS)
     connection.execute(
         f"""
-        CREATE TABLE stg_fact_visit AS SELECT * FROM read_csv('{SAMPLE_CSV.as_posix()}', header = true, columns = {{
+        CREATE TABLE stg_fact_visit AS
+        SELECT *
+        FROM read_csv('{SAMPLE_CSV.as_posix()}', header = true, columns = {{
             'leader_id': 'VARCHAR', 'host_country_iso3': 'VARCHAR', 'leader_key': 'INTEGER',
-            'visitor_country_key': 'INTEGER', 'host_country_key': 'INTEGER', 'visit_type_key': 'INTEGER',
+            'visitor_country_key': 'INTEGER', 'host_country_key': 'INTEGER',
             'start_date_key': 'DATE', 'end_date_key': 'DATE', 'duration_days': 'INTEGER',
-            'is_multilateral': 'BOOLEAN', 'matched_in_gdelt': 'BOOLEAN', 'wiki_page_id': 'BIGINT',
+            'is_multilateral': 'BOOLEAN', 'is_transit': 'BOOLEAN', 'matched_in_gdelt': 'BOOLEAN', 'wiki_page_id': 'BIGINT',
             'wiki_revision_id': 'BIGINT', 'pre_window_start': 'DATE', 'pre_window_end': 'DATE',
             'post_window_start': 'DATE', 'post_window_end': 'DATE'}})
         """

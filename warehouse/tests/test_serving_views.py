@@ -28,7 +28,6 @@ SEED = """
 INSERT INTO dim_country (country_key, country_name, iso3_code, fips_code, cameo_code, region) VALUES
     (1, 'France', 'FRA', 'FR', 'FRA', NULL), (2, 'Japan', 'JPN', 'JA', 'JPN', NULL),
     (3, 'Germany', 'DEU', 'GM', 'DEU', NULL), (4, 'Italy', 'ITA', 'IT', 'ITA', NULL);
-INSERT INTO dim_visit_type VALUES (1, 'state');
 INSERT INTO dim_event_type VALUES (1, '042', '04', 1, TRUE), (2, '190', '19', 4, FALSE);
 INSERT INTO dim_leader VALUES (1, 'Q1', 'Leader A', NULL, 1, DATE '2020-01-01', NULL),
                               (2, 'Q2', 'Leader B', NULL, 2, DATE '2020-01-01', NULL);
@@ -36,15 +35,15 @@ INSERT INTO dim_date
 SELECT CAST(d AS DATE), year(d), month(d), week(d), day(d)
 FROM generate_series(DATE '2024-12-17', DATE '2025-07-15', INTERVAL 1 DAY) AS t(d);
 INSERT INTO fact_visit VALUES
-    (1, 1, 1, 2, 1, DATE '2025-03-10', DATE '2025-03-12', 3, FALSE, FALSE, 1, 1,
+    (1, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 3, FALSE, FALSE, FALSE, 1, 1,
      DATE '2025-02-23', DATE '2025-03-09', DATE '2025-03-13', DATE '2025-03-27'),
-    (2, 1, 1, 2, 1, DATE '2025-03-20', DATE '2025-03-21', 2, FALSE, FALSE, 1, 1,
+    (2, 1, 1, 2, DATE '2025-03-20', DATE '2025-03-21', 2, FALSE, FALSE, FALSE, 1, 1,
      DATE '2025-03-05', DATE '2025-03-19', DATE '2025-03-22', DATE '2025-04-05'),
-    (3, 1, 1, 3, 1, DATE '2025-05-10', DATE '2025-05-10', 1, TRUE, FALSE, 1, 1,
+    (3, 1, 1, 3, DATE '2025-05-10', DATE '2025-05-10', 1, TRUE, FALSE, FALSE, 1, 1,
      DATE '2025-04-25', DATE '2025-05-09', DATE '2025-05-11', DATE '2025-05-25'),
-    (4, 1, 1, 4, 1, DATE '2025-06-10', DATE '2025-06-10', 1, FALSE, FALSE, 1, 1,
+    (4, 1, 1, 4, DATE '2025-06-10', DATE '2025-06-10', 1, FALSE, FALSE, FALSE, 1, 1,
      DATE '2025-05-26', DATE '2025-06-09', DATE '2025-06-11', DATE '2025-06-25'),
-    (5, 2, 2, 1, 1, DATE '2025-04-15', DATE '2025-04-15', 1, FALSE, FALSE, 1, 1,
+    (5, 2, 2, 1, DATE '2025-04-15', DATE '2025-04-15', 1, FALSE, FALSE, FALSE, 1, 1,
      DATE '2025-03-31', DATE '2025-04-14', DATE '2025-04-16', DATE '2025-04-30');
 INSERT INTO fact_gdelt_event VALUES
     (101, DATE '2025-02-23', 1, 2, 1, 'u101', 1.0, 2.0, 3),   -- first day of PRE of visit 1

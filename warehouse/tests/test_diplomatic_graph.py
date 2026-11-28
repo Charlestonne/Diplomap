@@ -27,7 +27,6 @@ SEED = """
 INSERT INTO dim_country (country_key, country_name, iso3_code, fips_code, cameo_code, region) VALUES
     (1, 'France', 'FRA', 'FR', 'FRA', 'Europe'), (2, 'Japan', 'JPN', 'JA', 'JPN', 'Asia'),
     (3, 'Germany', 'DEU', 'GM', 'DEU', 'Europe'), (4, 'Italy', 'ITA', 'IT', 'ITA', 'Europe');
-INSERT INTO dim_visit_type VALUES (1, 'state');
 INSERT INTO dim_leader VALUES
     (1, 'Q1', 'Leader A', 'President', 1, DATE '2020-01-01', NULL),
     (2, 'Q2', 'Leader B', 'Prime Minister', 2, DATE '2021-01-01', NULL),
@@ -37,7 +36,8 @@ INSERT INTO dim_date
 SELECT CAST(d AS DATE), year(d), month(d), week(d), day(d)
 FROM generate_series(DATE '2024-12-17', DATE '2025-07-15', INTERVAL 1 DAY) AS t(d);
 INSERT INTO fact_visit
-SELECT k, leader, visitor, host, 1, s, e, (e - s) + 1, FALSE, FALSE, 1, 1, s - 15, s - 1, e + 1, e + 15
+SELECT k, leader, visitor, host, s, e, (e - s) + 1, FALSE, FALSE, FALSE, k, 1,
+       s - 15, s - 1, e + 1, e + 15
 FROM (VALUES (1, 1, 1, 2, DATE '2025-02-10', DATE '2025-02-12'),
              (2, 1, 1, 2, DATE '2025-04-01', DATE '2025-04-01'),
              (3, 1, 1, 3, DATE '2025-03-05', DATE '2025-03-06'),
