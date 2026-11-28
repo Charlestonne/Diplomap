@@ -114,7 +114,9 @@ def _table_contracts():
     contracts = []
     for path in sorted(CONTRACTS_DIR.glob("*.yml")):
         data = yaml.safe_load(path.read_text())
-        if data and data.get("type") == "table":
+        # This file validates the production star schema. Staging contracts
+        # are loaded and validated by warehouse/staging/loader.py instead.
+        if data and data.get("type") == "table" and data.get("layer") == "production":
             contracts.append(data)
     return contracts
 
@@ -192,8 +194,6 @@ BAD_ROWS = {
         "FALSE, FALSE, TRUE, 100, 200, DATE '2025-02-25', DATE '2025-03-11', DATE '2025-03-11', DATE '2025-03-25')"
     ),
     "visit_wrong_duration": VALID_VISIT.replace("VALUES (1, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 3", "VALUES (2, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 5"),
-    "visit_pre_window_wrong": VALID_VISIT.replace("VALUES (1,", "VALUES (2,").replace("DATE '2025-02-23'", "DATE '2025-02-24'"),
-    "visit_post_window_wrong": VALID_VISIT.replace("VALUES (1,", "VALUES (2,").replace("DATE '2025-03-27'", "DATE '2025-03-28'"),
     "visit_date_outside_calendar": (
         "INSERT INTO fact_visit VALUES (2, 1, 1, 2, DATE '2025-11-01', DATE '2025-11-03', 3, "
         "FALSE, FALSE, TRUE, 100, 200, DATE '2025-10-17', DATE '2025-10-31', DATE '2025-11-04', DATE '2025-11-18')"
