@@ -18,7 +18,7 @@ columns:
   - name: target_table
     type: VARCHAR
     nullable: false
-    description: Intended staging table: stg_country, stg_leader or stg_visit.
+    description: "Intended staging table: stg_country, stg_leader or stg_visit."
   - name: source_row_index
     type: BIGINT
     nullable: false
