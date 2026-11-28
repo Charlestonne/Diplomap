@@ -2,6 +2,7 @@ SHELL := /bin/sh
 
 COMPOSE := docker compose
 AIRFLOW_EXEC := $(COMPOSE) exec -T airflow-scheduler airflow
+PYTHON ?= .venv/bin/python
 GDELT_START_DATE ?= 2024-12-17
 
 .PHONY: help up down status health dags errors compile test enable trigger-wikipedia trigger-gdelt pipeline
@@ -40,10 +41,10 @@ errors:
 	$(AIRFLOW_EXEC) dags list-import-errors
 
 compile:
-	python3 -m py_compile ingestion/wikipedia_trips/*.py ingestion/wikidata_leaders/*.py orchestration/dags/*.py
+	$(PYTHON) -m py_compile ingestion/wikipedia_trips/*.py ingestion/wikidata_leaders/*.py orchestration/dags/*.py
 
 test:
-	python3 -m pytest
+	$(PYTHON) -m pytest
 
 enable:
 	$(AIRFLOW_EXEC) dags unpause diplomap_ingest_wikipedia
