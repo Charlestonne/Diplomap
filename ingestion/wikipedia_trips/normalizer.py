@@ -1,6 +1,8 @@
 import re
 from datetime import date
 
+from .transit import is_transit
+
 MONTHS = {
     "january": 1, "february": 2, "march": 3,
     "april": 4, "may": 5, "june": 6,
@@ -70,4 +72,5 @@ def normalize_visit(visit):
         "host_country_name": clean_country_name(visit["host_country_raw"]),
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
+        "is_transit": is_transit(visit.get("details_raw"), visit.get("host_country_raw")),
     }
