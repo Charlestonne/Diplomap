@@ -38,21 +38,21 @@ INSERT INTO stg_gdelt_event VALUES
     (DATE '2025-04-03', 'DEU', 'JPN', '040'),   -- not a visit code
     (DATE '2025-04-05', 'DEU', 'JPN', '042');   -- the day after visit 3
 CREATE TABLE stg_visit (leader_id VARCHAR, host_country_iso3 VARCHAR, start_date DATE, end_date DATE,
-                        is_multilateral BOOLEAN,
+                        is_multilateral BOOLEAN, is_transit BOOLEAN,
                         wiki_page_id BIGINT, wiki_revision_id BIGINT);
 INSERT INTO stg_visit VALUES
     -- valid
-    ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', NULL,  100, 1),  -- unknown multilateral status is accepted
-    ('Q1', 'JPN', DATE '2025-03-31', DATE '2025-04-01', FALSE, 100, 1),  -- last day of version 10
-    ('Q1', 'JPN', DATE '2025-04-01', DATE '2025-04-04', TRUE,  100, 2),  -- first day of version 11
+    ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', NULL, NULL, 100, 1),  -- unknown flags are accepted
+    ('Q1', 'JPN', DATE '2025-03-31', DATE '2025-04-01', FALSE, FALSE, 100, 1),  -- last day of version 10
+    ('Q1', 'JPN', DATE '2025-04-01', DATE '2025-04-04', TRUE, FALSE, 100, 2),  -- first day of version 11
     -- one broken row per rule
-    ('Q9', 'JPN', DATE '2025-02-10', DATE '2025-02-11', FALSE, 100, 1),     -- visit_01
-    ('Q1', 'XXX', DATE '2025-02-10', DATE '2025-02-11', FALSE, 100, 1),     -- visit_02
-    ('Q1', 'FRA', DATE '2025-02-10', DATE '2025-02-11', FALSE, 100, 1),     -- visit_03
-    ('Q1', 'DEU', DATE '2025-02-12', DATE '2025-02-10', FALSE, 100, 1),     -- visit_04
-    ('Q1', 'JPN', DATE '2025-06-29', DATE '2025-07-20', FALSE, 100, 1),     -- visit_05
-    ('Q1', 'DEU', DATE '2025-01-20', DATE '2025-01-21', FALSE, NULL, 1),     -- visit_06: missing Wikipedia page id
-    ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', FALSE, 100, 0);     -- visit_07 (older revision)
+    ('Q9', 'JPN', DATE '2025-02-10', DATE '2025-02-11', FALSE, FALSE, 100, 1),     -- visit_01
+    ('Q1', 'XXX', DATE '2025-02-10', DATE '2025-02-11', FALSE, FALSE, 100, 1),     -- visit_02
+    ('Q1', 'FRA', DATE '2025-02-10', DATE '2025-02-11', FALSE, FALSE, 100, 1),     -- visit_03
+    ('Q1', 'DEU', DATE '2025-02-12', DATE '2025-02-10', FALSE, FALSE, 100, 1),     -- visit_04
+    ('Q1', 'JPN', DATE '2025-06-29', DATE '2025-07-20', FALSE, FALSE, 100, 1),     -- visit_05
+    ('Q1', 'DEU', DATE '2025-01-20', DATE '2025-01-21', FALSE, FALSE, NULL, 1),     -- visit_06: missing Wikipedia page id
+    ('Q1', 'JPN', DATE '2025-02-10', DATE '2025-02-12', FALSE, FALSE, 100, 0);     -- visit_07 (older revision)
 """
 
 

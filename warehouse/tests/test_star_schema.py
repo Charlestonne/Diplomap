@@ -76,7 +76,7 @@ def seed(con):
 
 VALID_VISIT = (
     "INSERT INTO fact_visit VALUES (1, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 3, "
-    "FALSE, TRUE, 100, 200, DATE '2025-02-23', DATE '2025-03-09', DATE '2025-03-13', DATE '2025-03-27')"
+    "FALSE, FALSE, TRUE, 100, 200, DATE '2025-02-23', DATE '2025-03-09', DATE '2025-03-13', DATE '2025-03-27')"
 )
 VALID_EVENT = (
     "INSERT INTO fact_gdelt_event VALUES (1001, DATE '2025-03-11', 1, 2, 1, 'http://example.org/a', 3.5, -1.2, 10)"
@@ -189,14 +189,14 @@ BAD_ROWS = {
     "visit_same_visitor_and_host": VALID_VISIT.replace("VALUES (1, 1, 1, 2", "VALUES (2, 1, 1, 1"),
     "visit_end_before_start": (
         "INSERT INTO fact_visit VALUES (2, 1, 1, 2, DATE '2025-03-12', DATE '2025-03-10', 3, "
-        "FALSE, TRUE, 100, 200, DATE '2025-02-25', DATE '2025-03-11', DATE '2025-03-11', DATE '2025-03-25')"
+        "FALSE, FALSE, TRUE, 100, 200, DATE '2025-02-25', DATE '2025-03-11', DATE '2025-03-11', DATE '2025-03-25')"
     ),
     "visit_wrong_duration": VALID_VISIT.replace("VALUES (1, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 3", "VALUES (2, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 5"),
     "visit_pre_window_wrong": VALID_VISIT.replace("VALUES (1,", "VALUES (2,").replace("DATE '2025-02-23'", "DATE '2025-02-24'"),
     "visit_post_window_wrong": VALID_VISIT.replace("VALUES (1,", "VALUES (2,").replace("DATE '2025-03-27'", "DATE '2025-03-28'"),
     "visit_date_outside_calendar": (
         "INSERT INTO fact_visit VALUES (2, 1, 1, 2, DATE '2025-11-01', DATE '2025-11-03', 3, "
-        "FALSE, TRUE, 100, 200, DATE '2025-10-17', DATE '2025-10-31', DATE '2025-11-04', DATE '2025-11-18')"
+        "FALSE, FALSE, TRUE, 100, 200, DATE '2025-10-17', DATE '2025-10-31', DATE '2025-11-04', DATE '2025-11-18')"
     ),
     "event_duplicate_id": VALID_EVENT,
     "event_goldstein_above_10": VALID_EVENT.replace("VALUES (1001", "VALUES (1002").replace("3.5", "11"),
