@@ -32,7 +32,6 @@ TABLES = {
     "dim_date",
     "dim_event_type",
     "dim_leader",
-    "dim_visit_type",
     "fact_visit",
     "fact_gdelt_event",
 }
@@ -56,7 +55,6 @@ def seed(con):
             (3, 'Germany', 'Europe', 'DEU', 'GM', 'DEU')
         """
     )
-    con.execute("INSERT INTO dim_visit_type VALUES (1, 'state'), (2, 'unknown')")
     con.execute(
         """
         INSERT INTO dim_event_type VALUES
@@ -77,7 +75,7 @@ def seed(con):
 
 
 VALID_VISIT = (
-    "INSERT INTO fact_visit VALUES (1, 1, 1, 2, 1, DATE '2025-03-10', DATE '2025-03-12', 3, "
+    "INSERT INTO fact_visit VALUES (1, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 3, "
     "FALSE, TRUE, 100, 200, DATE '2025-02-23', DATE '2025-03-09', DATE '2025-03-13', DATE '2025-03-27')"
 )
 VALID_EVENT = (
@@ -177,7 +175,6 @@ BAD_ROWS = {
     "event_type_cooperative_flag_inconsistent": "INSERT INTO dim_event_type VALUES (9, '010', '01', 1, FALSE)",
     "event_type_root_out_of_range": "INSERT INTO dim_event_type VALUES (9, '2501', '25', 1, TRUE)",
     "event_type_code_does_not_start_with_root": "INSERT INTO dim_event_type VALUES (9, '050', '04', 1, TRUE)",
-    "visit_type_not_in_closed_list": "INSERT INTO dim_visit_type VALUES (9, 'official')",
     "leader_valid_to_before_valid_from": (
         "INSERT INTO dim_leader VALUES (9, 'Q9', 'B', NULL, 1, DATE '2025-01-02', DATE '2025-01-01')"
     ),
@@ -191,14 +188,14 @@ BAD_ROWS = {
     "visit_duplicate_key": VALID_VISIT,
     "visit_same_visitor_and_host": VALID_VISIT.replace("VALUES (1, 1, 1, 2", "VALUES (2, 1, 1, 1"),
     "visit_end_before_start": (
-        "INSERT INTO fact_visit VALUES (2, 1, 1, 2, 1, DATE '2025-03-12', DATE '2025-03-10', 3, "
+        "INSERT INTO fact_visit VALUES (2, 1, 1, 2, DATE '2025-03-12', DATE '2025-03-10', 3, "
         "FALSE, TRUE, 100, 200, DATE '2025-02-25', DATE '2025-03-11', DATE '2025-03-11', DATE '2025-03-25')"
     ),
-    "visit_wrong_duration": VALID_VISIT.replace("VALUES (1, 1, 1, 2, 1, DATE '2025-03-10', DATE '2025-03-12', 3", "VALUES (2, 1, 1, 2, 1, DATE '2025-03-10', DATE '2025-03-12', 5"),
+    "visit_wrong_duration": VALID_VISIT.replace("VALUES (1, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 3", "VALUES (2, 1, 1, 2, DATE '2025-03-10', DATE '2025-03-12', 5"),
     "visit_pre_window_wrong": VALID_VISIT.replace("VALUES (1,", "VALUES (2,").replace("DATE '2025-02-23'", "DATE '2025-02-24'"),
     "visit_post_window_wrong": VALID_VISIT.replace("VALUES (1,", "VALUES (2,").replace("DATE '2025-03-27'", "DATE '2025-03-28'"),
     "visit_date_outside_calendar": (
-        "INSERT INTO fact_visit VALUES (2, 1, 1, 2, 1, DATE '2025-11-01', DATE '2025-11-03', 3, "
+        "INSERT INTO fact_visit VALUES (2, 1, 1, 2, DATE '2025-11-01', DATE '2025-11-03', 3, "
         "FALSE, TRUE, 100, 200, DATE '2025-10-17', DATE '2025-10-31', DATE '2025-11-04', DATE '2025-11-18')"
     ),
     "event_duplicate_id": VALID_EVENT,
