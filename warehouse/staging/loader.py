@@ -13,6 +13,7 @@ from warehouse.staging.country_reference import (
     DEFAULT_ISO_FILE,
     load_country_reference,
 )
+from ingestion.wikipedia_trips.transit import is_transit
 
 
 WAREHOUSE_DIRECTORY = Path(__file__).resolve().parents[1]
@@ -249,6 +250,12 @@ def office_valid_on_visit_start(visits, leaders):
 def validate_visits(candidates, accepted_countries, accepted_leaders):
     """Validate fully resolved visits and the references needed by staging"""
     frame = candidates.copy()
+    # Older resolved collections may predate this derived field. Recompute it
+    # from preserved raw text so they remain loadable after the schema change.
+    if "is_transit" not in frame:
+        frame["is_transit"] = frame.apply(
+            lambda row: is_transit(row.get("details_raw"), row.get("host_country_raw")), axis=1
+        )
     add_reason(frame, frame["resolution_status"].ne("resolved"), "visit_not_resolved")
     add_reason(frame, frame["office_resolution_status"].ne("resolved"), "office_not_resolved")
     add_reason(frame, frame["country_resolution_status"].ne("resolved"), "country_not_resolved")
@@ -301,7 +308,7 @@ def replace_collection_rows(connection, collection_id, countries, leaders, visit
     ])
     insert_rows(connection, "stg_visit", visits.accepted, [
         "collection_id", "leader_qid", "office_statement_uri", "visitor_country_qid", "visitor_country_iso3",
-        "host_country_qid", "host_country_iso3", "start_date", "end_date", "duration_days", "is_multilateral",
+        "host_country_qid", "host_country_iso3", "start_date", "end_date", "duration_days", "is_multilateral", "is_transit",
         "wiki_language", "wiki_page_id", "wiki_revision_id", "source_table_index", "source_row_index",
         "host_country_raw", "date_raw", "areas_visited_raw", "details_raw", "source_file", "source_record",
     ])

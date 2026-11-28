@@ -82,6 +82,7 @@ CREATE TABLE fact_visit (
     end_date_key         DATE    NOT NULL REFERENCES dim_date (date_key),
     duration_days        INTEGER NOT NULL,
     is_multilateral      BOOLEAN,  -- TRUE confirmed; FALSE explicitly ruled out; NULL unknown
+    is_transit           BOOLEAN,  -- TRUE transit/stopover; FALSE no matching wording; NULL no details
     matched_in_gdelt     BOOLEAN NOT NULL,
     wiki_page_id         BIGINT  NOT NULL,
     wiki_revision_id     BIGINT  NOT NULL,

@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS stg_visit (
     end_date DATE NOT NULL,
     duration_days INTEGER NOT NULL,
     is_multilateral BOOLEAN,
+    is_transit BOOLEAN,
     wiki_language VARCHAR NOT NULL,
     wiki_page_id BIGINT NOT NULL,
     wiki_revision_id BIGINT NOT NULL,

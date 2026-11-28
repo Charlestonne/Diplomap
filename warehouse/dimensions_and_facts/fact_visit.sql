@@ -5,6 +5,7 @@
 --   stg_visit(leader_id VARCHAR      -- Wikidata QID
 --             host_country_iso3 VARCHAR, start_date DATE, end_date DATE,
 --             is_multilateral BOOLEAN,
+--             is_transit BOOLEAN,
 --             wiki_page_id BIGINT, wiki_revision_id BIGINT)
 -- A missing key gives a NULL here on purpose: the gate quarantines the row with its reason instead of dropping it.
 
@@ -18,6 +19,7 @@ SELECT v.leader_id,
        v.end_date                                       AS end_date_key,
        (v.end_date - v.start_date) + 1                  AS duration_days,
        v.is_multilateral,
+       v.is_transit,
        -- Visit also coded in GDELT: CAMEO 042 (make a visit) or 043 (host a visit), same pair in either order,
        -- event date inside the visit days.
        EXISTS (
