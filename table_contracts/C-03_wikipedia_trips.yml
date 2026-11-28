@@ -1,0 +1,32 @@
+id: C-03
+name: wikipedia_trips_raw
+type: source
+description: Rendered HTML returned by the MediaWiki parse API, before local parsing.
+inventory: ingestion/config/leaders.yaml
+scope:
+  status: Initial inventory, Macron only; extend after the team confirms the leaders in scope.
+  years: [2025]
+storage:
+  path: data/raw/wikipedia/{leader_id}/{language}/{page_id}/{revision_id}/
+  files:
+    page.html: UTF-8 HTML, unchanged after download.
+    metadata.json: Source and revision identifiers and collection timestamp.
+  policy: Preserve first capture of each revision; never overwrite an existing saved capture.
+metadata_fields:
+  - leader_id
+  - page_title
+  - language
+  - page_id
+  - revision_id
+  - source_url
+  - fetched_at
+checks:
+  - Inventory must be a nonempty list; its structure is maintained by the project.
+  - HTTP and MediaWiki API errors stop collection.
+  - HTML must be a nonempty string and page/revision identifiers positive integers.
+limitations:
+  - Pages are saved directly; retry collection after an interrupted write.
+  - HTML is rendered content, not wikitext or the complete browser document.
+  - Templates can change rendered HTML without changing the page revision; first capture is preserved.
+  - Inventory years describe intended scope; collection saves the entire page.
+  - Coverage, dates, countries and visit types are validated in later processing stages.
